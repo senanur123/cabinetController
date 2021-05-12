@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" 
+style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" 
+fx:controller="layouts.startPageController">
+   <children>
+      <Label id="type" alignment="CENTER" layoutY="42.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="TEST-INIALISIERUNG" textAlignment="CENTER" AnchorPane.topAnchor="50.0">
+         <font>
+            <Font name="Apple Braille" size="24.0" />
+         </font>
+      </Label>
+      <Button id="beginButton" fx:id="testStartButton" layoutX="128.0" layoutY="119.0" mnemonicParsing="false" onAction="#start_b" prefHeight="50.0" prefWidth="345.0" style="-fx-background-color: HONEYDEW; -fx-border-color: WHITE;" text="Beginn Initialisierung">
+         <font>
+            <Font name="Apple Braille Outline 6 Dot" size="18.0" />
+         </font>
+      </Button>
+      <TextField fx:id="testNummerText" layoutX="128.0" layoutY="186.0" prefHeight="50.0" prefWidth="345.0" text="TESTNUMMER:">
+         <font>
+            <Font name="Apple Braille" size="16.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="datumText" layoutX="128.0" layoutY="243.0" prefHeight="50.0" prefWidth="345.0" text="DATUM:">
+         <font>
+            <Font name="Apple Braille Outline 6 Dot" size="16.0" />
+         </font>
+      </TextField>
+      <Button id="beginButton" fx:id="fortsetzenButton" layoutX="128.0" layoutY="310.0" mnemonicParsing="false" onAction="#fortsetzen_b" prefHeight="50.0" prefWidth="345.0" style="-fx-background-color: HONEYDEW; -fx-border-color: WHITE;" text="fortsetzen">
+         <font>
+            <Font name="Apple Braille Outline 6 Dot" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

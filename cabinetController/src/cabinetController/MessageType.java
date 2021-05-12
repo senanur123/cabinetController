@@ -1,3 +1,4 @@
+package cabinetController;
 
 
 public enum MessageType {
