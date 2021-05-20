@@ -25,7 +25,7 @@ public class Main extends Application {
 		stage.setTitle("Klimaschranksteuerer");
 		stage.setWidth(600);
 		stage.setHeight(400);
-		stage.setResizable(false);
+		stage.setResizable(true);
 		stage.setScene(scene);
 		stage.show();
 	}
