@@ -37,7 +37,7 @@ public class executionController {
 			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("testResults.fxml"));
 			stage.setScene(new Scene(root));
 			stage.setTitle("Klimaschranksteuerer");
-			stage.setFullScreen(true);
+			stage.sizeToScene();
 			stage.setResizable(true);
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.initOwner(((Node) e.getSource()).getScene().getWindow());

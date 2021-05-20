@@ -26,8 +26,6 @@ import javafx.stage.Stage;
 public class loginController implements Initializable {
 	
 	
-
-
 	@FXML
 	private PasswordField passwordText;
 
@@ -47,7 +45,7 @@ public class loginController implements Initializable {
 		
 		Connection con = null;
 	
-		Stage stageold=(Stage)loginButton.getScene().getWindow();
+		Stage stage=(Stage)loginButton.getScene().getWindow();
         String username = nameText.getText();	
         String password = passwordText.getText();
 
@@ -62,8 +60,7 @@ public class loginController implements Initializable {
 				// TODO: login username ve pass kontrol edilcek doðruysa 
 				labelLogin.setText("Connection kuruldu!");
 				//System.out.println("Connection kuruldu!");
-				Stage stage = new Stage();
-				
+			
 				
 				
 				ArrayList<String> array = DBConnection.showTableperson();
@@ -71,15 +68,13 @@ public class loginController implements Initializable {
 				if(username.equals(array.get(3)) && password.equals(array.get(4))) {
 					labelLogin.setText("Doðru");
 					
-					stageold.close();
 					AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("initialization.fxml")); // eðer login baþarýlýysa çalýþacak
-					
 					stage.setScene(new Scene(root));
 					stage.setTitle("Klimaschranksteuerer");
-					stage.setFullScreen(true);
+					stage.sizeToScene();
 					stage.setResizable(true);
-					stage.initModality(Modality.WINDOW_MODAL);
-					stage.initOwner(((Node) e.getSource()).getScene().getWindow());
+					//stage.initModality(Modality.WINDOW_MODAL);
+					//stage.initOwner(((Node) e.getSource()).getScene().getWindow());
 
 					stage.show();
 					
@@ -88,29 +83,14 @@ public class loginController implements Initializable {
 					labelLogin.setText("Check!");
 				}
 				
-			
-				
-				
-				
 			}
 			
-			/*
-			
-			*/
 
 			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
-		/*
-		 * stage = new Stage(); Parent root =
-		 * FXMLLoader.load(getClass().getResource("Initialisierung.fxml")); Scene scene
-		 * = new Scene(root, 400,600); stage.setTitle("Klimaschranksteuerer");
-		 * stage.setWidth(600); stage.setHeight(400); stage.setResizable(false);
-		 * stage.setScene(scene); stage.show();
-		 */
 
 	}
 

@@ -26,10 +26,10 @@ public class initializationController {
 
 		try {
 			Stage stage = new Stage();
-			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("startPage.fxml"));
+			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("register.fxml"));
 			stage.setScene(new Scene(root));
 			stage.setTitle("Klimaschranksteuerer");
-			stage.setFullScreen(true);
+			stage.sizeToScene();
 			stage.setResizable(true);
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.initOwner(((Node) e.getSource()).getScene().getWindow());

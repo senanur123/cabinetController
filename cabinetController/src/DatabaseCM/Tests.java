@@ -8,6 +8,7 @@ public class Tests {
 	private int testnummer;
 	private double starttemp;
 	private double zieltemp;
+	// ArrayList 
 	
 	public int getTestnummer() {
 		return testnummer;

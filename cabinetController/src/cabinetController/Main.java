@@ -23,8 +23,7 @@ public class Main extends Application {
 		Parent root = FXMLLoader.load(getClass().getResource("/layouts/loginPage.fxml"));
 		Scene scene = new Scene(root);
 		stage.setTitle("Klimaschranksteuerer");
-		stage.setWidth(600);
-		stage.setHeight(400);
+		stage.sizeToScene();
 		stage.setResizable(true);
 		stage.setScene(scene);
 		stage.show();

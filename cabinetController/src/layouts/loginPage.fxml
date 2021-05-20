@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="627.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.loginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="531.0" prefWidth="627.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.loginController">
    <children>
-      <Label id="type" alignment="CENTER" layoutY="49.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="LOGIN" textAlignment="CENTER">
+      <Label id="type" alignment="CENTER" layoutY="49.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="LOGIN" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
          <font>
             <Font name="Apple Braille" size="24.0" />
          </font>
@@ -24,7 +24,7 @@
             <Font name="Charter Bold" size="18.0" />
          </font>
       </Label>
-      <TextField id="nameText" fx:id="nameText" layoutX="250.0" layoutY="140.0" prefHeight="42.0" prefWidth="256.0" promptText="Name">
+      <TextField id="nameText" fx:id="nameText" layoutX="250.0" layoutY="140.0" prefHeight="42.0" prefWidth="256.0" promptText="Name" AnchorPane.rightAnchor="121.0">
          <font>
             <Font name="Apple Braille" size="16.0" />
          </font>
@@ -34,16 +34,11 @@
             <Font name="Apple Braille" size="16.0" />
          </font>
       </PasswordField>
-      <Button id="loginButton" fx:id="loginButton" layoutX="163.0" layoutY="269.0" mnemonicParsing="false" onAction="#login_b" prefHeight="35.0" prefWidth="256.0" style="-fx-background-color: HONEYDEW; -fx-border-color: WHITE;" text="ANMELDEN">
+      <Button id="loginButton" fx:id="loginButton" layoutX="359.0" layoutY="345.0" mnemonicParsing="false" onAction="#login_b" prefHeight="37.0" prefWidth="149.0" style="-fx-background-color: HONEYDEW; -fx-border-color: WHITE;" text="ANMELDEN">
          <font>
             <Font name="Apple Braille Outline 6 Dot" size="16.0" />
          </font>
       </Button>
-      <Button id="logoutButton" fx:id="logoutButton" layoutX="163.0" layoutY="315.0" mnemonicParsing="false" onAction="#logout_b" prefHeight="35.0" prefWidth="256.0" style="-fx-background-color: HONEYDEW;" text="BEENDEN">
-         <font>
-            <Font name="Apple Braille" size="16.0" />
-         </font>
-      </Button>
-      <Label fx:id="labelLogin" layoutX="170.0" layoutY="364.0" text="Bitte geben Sie ihre Name und Passwort!" textFill="WHITE" />
+      <Label fx:id="labelLogin" layoutX="270.0" layoutY="266.0" text="Bitte geben Sie ihre Name und Passwort!" textFill="WHITE" />
    </children>
 </AnchorPane>

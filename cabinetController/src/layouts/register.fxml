@@ -18,20 +18,20 @@
       </Label>
       <Label layoutX="22.0" layoutY="147.0" prefHeight="31.0" prefWidth="93.0" text="Slotnummer:" textFill="WHITE" />
       <Label layoutX="22.0" layoutY="193.0" prefHeight="31.0" prefWidth="93.0" text="Gerät-ID:" textFill="WHITE" />
-      <TextField fx:id="GerätText" layoutX="115.0" layoutY="195.0">
+      <TextField fx:id="geraetText" layoutX="115.0" layoutY="195.0">
          <font>
             <Font name="Apple Braille" size="13.0" />
          </font></TextField>
-      <Button fx:id="uberprufenButton" layoutX="54.0" layoutY="282.0" mnemonicParsing="false" onAction="#uberprufen_b" prefHeight="42.0" prefWidth="190.0" style="-fx-background-color: HONEYDEW;" text="Registrieren">
+      <Button fx:id="registerButton" layoutX="54.0" layoutY="282.0" mnemonicParsing="false" onAction="#onRegister" prefHeight="42.0" prefWidth="190.0" style="-fx-background-color: HONEYDEW;" text="Registrieren">
          <font>
             <Font name="Apple Braille" size="13.0" />
          </font></Button>
-      <TableView layoutX="330.0" layoutY="122.0" prefHeight="390.0" prefWidth="325.0" AnchorPane.bottomAnchor="80.0" AnchorPane.rightAnchor="32.0">
+      <TableView fx:id="slotTable" layoutX="330.0" layoutY="122.0" prefHeight="390.0" prefWidth="325.0" AnchorPane.bottomAnchor="80.0" AnchorPane.rightAnchor="32.0">
         <columns>
           <TableColumn prefWidth="163.0" text="Slotnummer" />
           <TableColumn prefWidth="161.0" text="Geræte-ID" />
         </columns>
       </TableView>
-      <ChoiceBox layoutX="115.0" layoutY="153.0" prefHeight="25.0" prefWidth="162.0" />
+      <ChoiceBox fx:id="slotChoice" layoutX="115.0" layoutY="153.0" prefHeight="25.0" prefWidth="162.0" />
    </children>
 </AnchorPane>

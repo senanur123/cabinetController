@@ -38,7 +38,7 @@ public class testResultsController2 {
 			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("loginPage.fxml"));
 			stage.setScene(new Scene(root));
 			stage.setTitle("Klimaschranksteuerer");
-			stage.setFullScreen(true);
+			stage.sizeToScene();
 			stage.setResizable(true);
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.initOwner(((Node) e.getSource()).getScene().getWindow());
