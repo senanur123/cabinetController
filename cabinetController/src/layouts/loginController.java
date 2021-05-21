@@ -5,6 +5,7 @@ package layouts;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -13,18 +14,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class loginController implements Initializable {
-	
 	
 	@FXML
 	private PasswordField passwordText;
@@ -41,41 +39,34 @@ public class loginController implements Initializable {
 	@FXML
 	private Label labelLogin;
 
+	
+	Connection con = null;
+	
 	public void login_b(ActionEvent e) throws IOException {
 		
-		Connection con = null;
+		
 	
-		Stage stage=(Stage)loginButton.getScene().getWindow();
         String username = nameText.getText();	
         String password = passwordText.getText();
 
 		try {
 			
-			
-			con = DBConnection.getConnection();
 			if(con==null) {
-				System.out.println("Connection hatalý!");
+				System.out.println("Verbindung wurde nicht hergestellt!");
 			}else {
 				
-				// TODO: login username ve pass kontrol edilcek doðruysa 
-				labelLogin.setText("Connection kuruldu!");
 				//System.out.println("Connection kuruldu!");
-			
-				
+				Stage stage = (Stage)loginButton.getScene().getWindow();
 				
 				ArrayList<String> array = DBConnection.showTableperson();
 				System.out.println("username: " + array.get(3));
 				if(username.equals(array.get(3)) && password.equals(array.get(4))) {
-					labelLogin.setText("Doðru");
 					
-					AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("initialization.fxml")); // eðer login baþarýlýysa çalýþacak
+					System.out.println("The username pass is correct!");
+					
+					AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("initialization.fxml")); 
 					stage.setScene(new Scene(root));
 					stage.setTitle("Klimaschranksteuerer");
-					stage.sizeToScene();
-					stage.setResizable(true);
-					//stage.initModality(Modality.WINDOW_MODAL);
-					//stage.initOwner(((Node) e.getSource()).getScene().getWindow());
-
 					stage.show();
 					
 					
@@ -83,8 +74,15 @@ public class loginController implements Initializable {
 					labelLogin.setText("Check!");
 				}
 				
+			
+				
+				
+				
 			}
 			
+			/*
+			
+			*/
 
 			
 		} catch (Exception e1) {
@@ -92,15 +90,22 @@ public class loginController implements Initializable {
 			e1.printStackTrace();
 		}
 
-	}
-
-	public void logout_b(ActionEvent e) {
 
 	}
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
+		try {
+			
+			labelLogin.setText("Give your username and password in order to continue!");
+			con = DBConnection.getConnection();
+			
+			
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 
