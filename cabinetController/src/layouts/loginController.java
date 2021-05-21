@@ -42,7 +42,7 @@ public class loginController implements Initializable {
 	
 	Connection con = null;
 	
-	public void login_b(ActionEvent e) throws IOException {
+	public void loginAction(ActionEvent e) throws IOException {
 		
 		
 	
@@ -80,10 +80,6 @@ public class loginController implements Initializable {
 				
 			}
 			
-			/*
-			
-			*/
-
 			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block

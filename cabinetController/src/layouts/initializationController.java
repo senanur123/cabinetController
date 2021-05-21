@@ -95,7 +95,7 @@ public class initializationController implements Initializable {
  	        	        	labelInit.setText("The Page should move on now in  10 secs!");
  	        	        	Thread.sleep(10000);
  	        	        	Stage stage=(Stage)beginButton.getScene().getWindow();
- 	        	        	AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("startPage.fxml"));
+ 	        	        	AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("register.fxml"));
     	        			stage.setScene(new Scene(root));
     	        			
  	        	        }else {

@@ -6,84 +6,94 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.loginController">
-   <children>
-      <Label id="type" alignment="CENTER" contentDisplay="CENTER" prefHeight="58.0" prefWidth="800.0" style="-fx-background-color: GAINSBORO;" text="LOGIN" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="704.0" prefWidth="940.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.loginController">
+  <children>
+  <Label id="type" alignment="CENTER" contentDisplay="CENTER" prefHeight="58.0" prefWidth="800.0" style="-fx-background-color: GAINSBORO;" text="LOGIN" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
          <font>
             <Font name="Apple Braille" size="24.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="247.0" layoutY="238.0" prefHeight="252.0" prefWidth="716.0">
-         <children>
-            <VBox alignment="CENTER" prefHeight="267.0" prefWidth="478.0">
-               <children>
-                  <HBox prefHeight="166.0" prefWidth="490.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <VBox prefHeight="211.0" prefWidth="182.0">
+    <GridPane alignment="CENTER" layoutY="140.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="940.0" AnchorPane.bottomAnchor="176.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0">
+      <children>
+        <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="304.0" prefWidth="551.0" spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+          <children>
+            <HBox id="HBox" alignment="CENTER" prefHeight="100.0" prefWidth="557.0" spacing="20.0">
+              <children>
+                        <VBox prefHeight="62.0" prefWidth="283.0">
                            <children>
-                              <Label prefHeight="42.0" prefWidth="300.0" text="Benutzername:" textFill="WHITE">
-                                 <font>
-                                    <Font name="Charter Bold" size="18.0" />
-                                 </font>
+                        <Label text="Benutzername:" textFill="WHITE">
                                  <VBox.margin>
-                                    <Insets bottom="5.0" top="5.0" />
+                                    <Insets bottom="20.0" />
                                  </VBox.margin>
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
                               </Label>
-                              <Label prefHeight="42.0" prefWidth="300.0" text="Password:" textFill="WHITE">
-                                 <font>
-                                    <Font name="Charter Bold" size="18.0" />
-                                 </font>
+                        <Label text="Passwort:" textFill="WHITE">
                                  <VBox.margin>
-                                    <Insets bottom="5.0" top="5.0" />
+                                    <Insets bottom="20.0" />
                                  </VBox.margin>
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox layoutX="10.0" layoutY="10.0" prefHeight="203.0" prefWidth="257.0">
+                        <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <TextField id="nameText" fx:id="nameText" prefHeight="42.0" prefWidth="300.0" promptText="Name">
+                        <TextField fx:id="nameText" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="210.0" promptText="Benutzername">
                                  <font>
-                                    <Font name="Apple Braille" size="16.0" />
+                                    <Font size="18.0" />
                                  </font>
                                  <VBox.margin>
-                                    <Insets bottom="5.0" top="5.0" />
+                                    <Insets bottom="5.0" />
                                  </VBox.margin>
                               </TextField>
-                              <PasswordField id="passwordText" fx:id="passwordText" prefHeight="42.0" prefWidth="300.0" promptText="Password">
-                                 <font>
-                                    <Font name="Apple Braille" size="16.0" />
-                                 </font>
+                              <PasswordField fx:id="passwordText" prefHeight="39.0" prefWidth="210.0" promptText="Passwort">
                                  <VBox.margin>
-                                    <Insets bottom="5.0" top="5.0" />
+                                    <Insets bottom="5.0" />
                                  </VBox.margin>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
                               </PasswordField>
                            </children>
                         </VBox>
+              </children>
+            </HBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="labelLogin" alignment="CENTER" prefHeight="21.0" prefWidth="454.0" text="Bitte geben Sie ihre Benutzername und Passwort!" textAlignment="CENTER" textFill="RED">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginAction" prefHeight="39.0" prefWidth="113.0" text="ANMELDEN" textAlignment="CENTER" textOverrun="ELLIPSIS">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <Label fx:id="labelLogin" text="Bitte geben Sie ihre Name und Passwort!" textAlignment="CENTER" textFill="WHITE">
-                     <VBox.margin>
-                        <Insets left="100.0" top="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button id="loginButton" fx:id="loginButton" mnemonicParsing="false" onAction="#login_b" prefHeight="37.0" prefWidth="149.0" style="-fx-background-color: HONEYDEW; -fx-border-color: WHITE;" text="ANMELDEN" textAlignment="CENTER">
-                     <font>
-                        <Font name="Apple Braille Outline 6 Dot" size="16.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-   </children>
+                  </VBox>
+          </children>
+          <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+          </padding>
+        </VBox>
+      </children>
+      <columnConstraints>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+  </children>
 </AnchorPane>
