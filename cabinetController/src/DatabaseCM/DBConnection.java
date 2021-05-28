@@ -112,7 +112,50 @@ public class DBConnection {
 		
 	}
 	
-	//	SELECT	
+	public static boolean getPerson(String username, String password){
+
+		try {
+			Connection con = getConnection();
+			
+			PreparedStatement stm = con.prepareStatement("SELECT * FROM person WHERE benutzername=\""+username +"\"" );
+			ResultSet res = stm.executeQuery();
+			if(res.next()) {
+				String pass = res.getString(5);
+				System.out.println("password: " + pass);
+				if(pass.equals(password)) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static boolean registerDevice(String gid, int slotno) {
+		
+		Connection con;
+		try {
+			con = getConnection();
+			PreparedStatement statement = con.prepareStatement("INSERT INTO geraet (geraetname, slotnummer) values(\'"+ gid + "\'," + slotno + ");");
+			
+			ResultSet result = statement.executeQuery();
+			System.out.println("result from insert into: " + result);
+			
+			return result.next();
+			
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	/*
 	public static ArrayList<String> showTableperson() throws Exception{
 		try {
 			Connection conn = getConnection();
@@ -154,7 +197,7 @@ public class DBConnection {
 		return null ;
 		
 		}
-	
+	*/
 	public static void main(String[] args) throws Exception {
 		
 		getConnection() ;

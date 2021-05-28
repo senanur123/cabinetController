@@ -44,57 +44,44 @@ public class loginController implements Initializable {
 	
 	public void loginAction(ActionEvent e) throws IOException {
 		
-		
-	
         String username = nameText.getText();	
         String password = passwordText.getText();
 
 		try {
 			
 			if(con==null) {
-				System.out.println("Verbindung wurde nicht hergestellt!");
+				System.out.println("Verbindung zur Datenbank fehlgeschlagen!");
 			}else {
 				
-				//System.out.println("Connection kuruldu!");
-				Stage stage = (Stage)loginButton.getScene().getWindow();
 				
-				ArrayList<String> array = DBConnection.showTableperson();
-				System.out.println("username: " + array.get(3));
-				if(username.equals(array.get(3)) && password.equals(array.get(4))) {
-					
-					System.out.println("The username pass is correct!");
-					
+				boolean loginSuccess = false;
+				loginSuccess = DBConnection.getPerson(username, password);
+				
+				if(loginSuccess) {
+					Stage stage = (Stage)loginButton.getScene().getWindow();
 					AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("initialization.fxml")); 
 					stage.setScene(new Scene(root));
-					stage.setTitle("Klimaschranksteuerer");
+					stage.sizeToScene();
+					stage.setResizable(true);
 					stage.show();
-					
+					stage.setMinWidth(stage.getWidth());
+			        stage.setMinHeight(stage.getHeight());
 					
 				}else {
-					labelLogin.setText("Check!");
+					labelLogin.setText("Bitte überprüfen Sie, ob Ihre Anmeldeinformationen wahr sind.");
 				}
-				
-			
-				
-				
-				
 			}
 			
-			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
-
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
 			
-			labelLogin.setText("Give your username and password in order to continue!");
+			labelLogin.setText("Geben Sie Ihren Benutzernamen und Ihr Passwort ein, um sich anzumelden.");
 			con = DBConnection.getConnection();
-			
 			
 			
 		} catch (ClassNotFoundException | SQLException e) {

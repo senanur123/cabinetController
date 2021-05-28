@@ -92,21 +92,25 @@ public class initializationController implements Initializable {
       	        	labelInit.setText(message);
       	        	
  	        	        if(message.contains("examinees")) { // initializing an examinee
- 	        	        	labelInit.setText("The Page should move on now in  10 secs!");
- 	        	        	Thread.sleep(10000);
+ 	        	        	//labelInit.setText("The Page should move on now in  10 secs!");
+ 	        	        	//Thread.sleep(10000);
  	        	        	Stage stage=(Stage)beginButton.getScene().getWindow();
  	        	        	AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("register.fxml"));
     	        			stage.setScene(new Scene(root));
+    	        			stage.sizeToScene();
+    	        			stage.setResizable(true);
+    	        			stage.show();
+    	        			stage.setMinWidth(stage.getWidth());
+    	        	        stage.setMinHeight(stage.getHeight());
     	        			
  	        	        }else {
  	        	        	labelInit.setText("Cabinet won't start!");
- 	        	        	Thread.sleep(5000);
+
  	        	        	
  	        	        }
       	        }
       	    }else {
       	    	labelInit.setText("Check that you gave appropriate values!");
-      	    	Thread.sleep(5000);
       	    }
 	 	    
 	 	    
@@ -123,7 +127,6 @@ public class initializationController implements Initializable {
 		
 		try {
 			labelInit.setText("Server wird starten...");
-			Thread.sleep(5000);
 			int port = 17;
 			CabinetMock cm = new CabinetMock(port);
 			cm.startServer();

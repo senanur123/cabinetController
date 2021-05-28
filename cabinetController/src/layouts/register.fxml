@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
@@ -7,31 +8,92 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="687.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.registerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="736.0" prefWidth="1110.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.registerController">
    <children>
-      <Label id="type" alignment="CENTER" layoutY="53.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="TEST-INIALISIERUNG" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+      <Label id="type" alignment="CENTER" layoutY="53.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="GERÄTE REGISTRIERUNG" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
          <font>
             <Font name="Apple Braille" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="22.0" layoutY="147.0" prefHeight="31.0" prefWidth="93.0" text="Slotnummer:" textFill="WHITE" />
-      <Label layoutX="22.0" layoutY="193.0" prefHeight="31.0" prefWidth="93.0" text="Gerät-ID:" textFill="WHITE" />
-      <TextField fx:id="geraetText" layoutX="115.0" layoutY="195.0">
-         <font>
-            <Font name="Apple Braille" size="13.0" />
-         </font></TextField>
-      <Button fx:id="registerButton" layoutX="54.0" layoutY="282.0" mnemonicParsing="false" onAction="#onRegister" prefHeight="42.0" prefWidth="190.0" style="-fx-background-color: HONEYDEW;" text="Registrieren">
-         <font>
-            <Font name="Apple Braille" size="13.0" />
-         </font></Button>
-      <TableView fx:id="slotTable" layoutX="330.0" layoutY="122.0" prefHeight="390.0" prefWidth="325.0" AnchorPane.bottomAnchor="80.0" AnchorPane.rightAnchor="32.0">
-        <columns>
-          <TableColumn prefWidth="163.0" text="Slotnummer" />
-          <TableColumn prefWidth="161.0" text="Geræte-ID" />
-        </columns>
-      </TableView>
-      <ChoiceBox fx:id="slotChoice" layoutX="115.0" layoutY="153.0" prefHeight="25.0" prefWidth="162.0" />
+      <GridPane alignment="CENTER" gridLinesVisible="true" layoutY="125.0" prefHeight="467.0" prefWidth="687.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <HBox alignment="CENTER" prefHeight="512.0" prefWidth="1064.0" spacing="20.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="504.0" prefWidth="457.0" spacing="30.0">
+                     <children>
+                        <Label fx:id="labelMsg" prefHeight="21.0" prefWidth="280.0" text="Registrieren Sie Geräte in Slots. " textFill="RED" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label minHeight="40.0" minWidth="100.0" prefHeight="40.0" prefWidth="100.0" text="Slotnummer:" textFill="WHITE" />
+                                    <Label prefHeight="40.0" prefWidth="100.0" text="Gerät-ID:" textFill="WHITE" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="100.0" prefWidth="189.0">
+                                 <children>
+                                    <Label fx:id="labelSlot" prefHeight="30.0" prefWidth="190.0" textFill="WHITE" />
+                                    <TextField fx:id="geraetText" prefHeight="30.0" prefWidth="190.0">
+                                       <font>
+                                          <Font name="Apple Braille" size="13.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets top="15.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox alignment="CENTER" prefHeight="118.0" prefWidth="326.0" spacing="20.0">
+                           <children>
+                              <Button fx:id="registerButton" mnemonicParsing="false" onAction="#onRegister" prefHeight="38.0" prefWidth="190.0" text="REGISTRIEREN" />
+                              <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStart" prefHeight="36.0" prefWidth="192.0" text="TEST START" />
+                              <Button fx:id="editButton" layoutX="90.0" layoutY="80.0" mnemonicParsing="false" onAction="#onEdit" prefHeight="36.0" prefWidth="192.0" text="TABELLE BEARBEITEN" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="editVbox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="21.0" prefWidth="407.0" text="Wählen Sie einen Steckplatz aus, der geändert werden soll." textFill="RED" />
+                              <HBox alignment="CENTER" prefHeight="81.0" prefWidth="351.0" spacing="10.0">
+                                 <children>
+                                    <ChoiceBox fx:id="slotEdit" prefHeight="31.0" prefWidth="110.0" />
+                                    <TextField fx:id="geraetEdit" prefHeight="31.0" prefWidth="213.0" />
+                                 </children>
+                              </HBox>
+                              <Button fx:id="setButton" mnemonicParsing="false" onAction="#onSetEdit" prefHeight="31.0" prefWidth="218.0" text="NEUEN WERT EINSTELLEN" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <TableView fx:id="slotTable" maxHeight="600.0" maxWidth="700.0" prefHeight="474.0" prefWidth="600.0">
+                    <columns>
+                      <TableColumn fx:id="slotColumn" prefWidth="155.0" text="Slotnummer" />
+                      <TableColumn fx:id="geraeteColumn" prefWidth="334.0" text="Geräte-ID" />
+                    </columns>
+                     <HBox.margin>
+                        <Insets bottom="20.0" right="30.0" top="10.0" />
+                     </HBox.margin>
+                  </TableView>
+               </children>
+            </HBox>
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>
