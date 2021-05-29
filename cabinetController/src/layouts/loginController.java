@@ -5,8 +5,6 @@ package layouts;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import DatabaseCM.DBConnection;
@@ -20,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class loginController implements Initializable {
@@ -31,16 +30,13 @@ public class loginController implements Initializable {
 	private TextField nameText;
 
 	@FXML
-	private Button loginButton;
-
-	@FXML
-	private Button logoutButton;
+	private Button loginButton, logoutButton;
 	
 	@FXML
 	private Label labelLogin;
 
 	
-	Connection con = null;
+	Connection con;
 	
 	public void loginAction(ActionEvent e) throws IOException {
 		
@@ -68,6 +64,7 @@ public class loginController implements Initializable {
 			        stage.setMinHeight(stage.getHeight());
 					
 				}else {
+					labelLogin.setTextFill(Color.color(1, 0, 0));
 					labelLogin.setText("Bitte überprüfen Sie, ob Ihre Anmeldeinformationen wahr sind.");
 				}
 			}
@@ -79,12 +76,12 @@ public class loginController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			
+			labelLogin.setTextFill(Color.color(0.42, 0.92, 0.46));
 			labelLogin.setText("Geben Sie Ihren Benutzernamen und Ihr Passwort ein, um sich anzumelden.");
-			con = DBConnection.getConnection();
+			con = DBConnection.getInstance().getConn();
 			
 			
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

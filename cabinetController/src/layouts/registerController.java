@@ -24,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class registerController implements Initializable {
@@ -52,7 +53,6 @@ public class registerController implements Initializable {
 	@FXML
 	private ChoiceBox<Integer> slotEdit;
 	
-	//List<Integer> list = new ArrayList<Integer>();
 	static ObservableList<Geraet> ol;
 	int selectedSlot;
 	
@@ -103,10 +103,9 @@ public class registerController implements Initializable {
 	}
 
 	public void onSetEdit(ActionEvent e) {
-		/*
 		slotColumn.setSortType(SortType.ASCENDING);
 		slotTable.getSortOrder().add(slotColumn);
-		*/
+		
 		int slot = (int) slotEdit.getSelectionModel().getSelectedItem();
 		String gerid = geraetEdit.getText();
 		
@@ -124,16 +123,15 @@ public class registerController implements Initializable {
 	
 	
 	public void onRegister(ActionEvent e) {
-		/*
 		slotColumn.setSortType(SortType.ASCENDING);
 		slotTable.getSortOrder().add(slotColumn);
-	*/
 		
 		if(counter<21) {
 			String gid = geraetText.getText();
 
 			if(gid==null || gid.isBlank()) {
 				System.out.println("Empty record!");
+				labelMsg.setTextFill(Color.color(1, 0, 0));
 				labelMsg.setText("Bitte geben Sie die Gerät-ID ein.");
 				geraetText.setText(null);
 			}else {
@@ -146,20 +144,25 @@ public class registerController implements Initializable {
 					slotTable.getItems().add(new Geraet(counter, gid));
 					setChoice(counter);
 					counter++;
+					labelMsg.setTextFill(Color.color(0.42, 0.92, 0.46));
 					labelMsg.setText("Gerät erfolgreich registriert!");
 					
 				}else {
 					slotTable.getItems().remove(counter-1);
+					labelMsg.setTextFill(Color.color(1, 0, 0));
 					labelMsg.setText("Gerät kann nicht initialisiert werden. Bitte geben Sie eine andere Geräte-ID ein.");
 				}
-				
+				if(counter==21) {
+					labelSlot.setText("");
+					labelMsg.setText("Die Kapazität ist voll, starten Sie das Test.");
+					geraetText.setEditable(false);
+					
+				}
 				
 			}
 			
-		}else {
-			labelSlot.setText("");
-			labelSlot.setText("Die Kapazität ist voll, starten Sie das Test.");
 		}
+		
 		labelSlot.setText(String.valueOf(counter));
 		
 		slotColumn.setSortType(SortType.ASCENDING);
@@ -179,6 +182,7 @@ public class registerController implements Initializable {
 	  	        String serverMsg = fromServer.readLine();
 	  	        
 	  	        if(serverMsg.contains("Ignoring")) {
+	  	        	labelMsg.setTextFill(Color.color(1, 0, 0));
 	  	        	labelMsg.setText("Ein Gerät kann nicht mehrmals registriert werden!");
 	  	        	return false;
 	  	        }else{
@@ -205,6 +209,7 @@ public class registerController implements Initializable {
 			if(checkTable()) {
 				
 				try {
+					labelMsg.setTextFill(Color.color(0.42, 0.92, 0.46));
 					labelMsg.setText("Alles gut!");
 					toServer.println(endInitMsg);
 					String msgS = fromServer.readLine();
@@ -233,6 +238,7 @@ public class registerController implements Initializable {
 		ol = slotTable.getItems();
 		
 		if(ol.isEmpty()) {
+			labelMsg.setTextFill(Color.color(1, 0, 0));
 			labelMsg.setText("Bitte geben sie mindestens ein Gerät ein!");
 			return false;
 		}

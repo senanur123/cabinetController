@@ -5,12 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class DBConnection {
+	static Connection conn;
+	private final static DBConnection instance = new DBConnection();
 	
-	public static Connection getConnection() throws ClassNotFoundException, SQLException {
+	public static DBConnection getInstance() {
+		return instance;
+	}
+	
+	public Connection getConn() {
+		return conn;
+	}
+	public static void setConn(Connection conn) {
+		DBConnection.conn = conn;
+	}
+	public DBConnection() {
 
 		try {
         String dbHost = "cabinet.c2hccmzxgo5q.us-east-2.rds.amazonaws.com";
@@ -21,16 +31,38 @@ public class DBConnection {
         String connectionString = "jdbc:mysql://" + dbHost + ":"
                 + dbPort + "/cabinet";
         Class.forName("com.mysql.cj.jdbc.Driver");
-
-        Connection conn = DriverManager.getConnection(connectionString, dbUser, dbPass);
-        return conn;
+        
+        conn = DriverManager.getConnection(connectionString, dbUser, dbPass);
+        
         
         } catch(Exception ex) {
 			System.out.println("Database connection error. SQLException: " + ex.getMessage());
-		} //+ ex.getSQLState() +ex.getErrorCode()
-		return null ;
+		} 
     }
 	
+	public static boolean getPerson(String username, String password){
+
+		try {
+			
+			
+			PreparedStatement stm = conn.prepareStatement("SELECT * FROM person WHERE benutzername=\""+username +"\"" );
+			ResultSet res = stm.executeQuery();
+			if(res.next()) {
+				String pass = res.getString(5);
+				System.out.println("password: " + pass);
+				if(pass.equals(password)) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/*
 	//	INSERT  ---Gerate
 	public static void insertData() throws Exception{
 		
@@ -50,7 +82,7 @@ public class DBConnection {
 		
 		try {
 			
-			Connection conn = getConnection() ;
+			
 			PreparedStatement posted = conn.prepareStatement("INSERT INTO person (nameperson, nachname, benutzername, passwort, status, rolle) VALUES ('"+nameperson+"' ,'"+nachname+"' ,'"+benutzername+"' ,'"+passwort+"' ,'"+status+"' , '"+rolle+"')");
 			posted.executeUpdate();
 		}
@@ -72,8 +104,7 @@ public class DBConnection {
 		final String nameperson = scan.next() ;
 		
 		try {
-			
-			Connection conn = getConnection() ;
+	
 			PreparedStatement posted = conn.prepareStatement("DELETE FROM person WHERE nameperson = ' "+ nameperson +" ' ;");
 			posted.setString(1, nameperson);
 			posted.executeUpdate();
@@ -96,7 +127,6 @@ public class DBConnection {
 		final String nameperson = scan.next() ;
 		
 		try {
-			Connection conn = getConnection() ;
 			PreparedStatement posted = conn.prepareStatement("UPDATE FROM person WHERE nameperson = ' "+ nameperson +" ' ;");
 			posted.setString(1, nameperson);
 			posted.executeUpdate();
@@ -112,34 +142,14 @@ public class DBConnection {
 		
 	}
 	
-	public static boolean getPerson(String username, String password){
-
-		try {
-			Connection con = getConnection();
-			
-			PreparedStatement stm = con.prepareStatement("SELECT * FROM person WHERE benutzername=\""+username +"\"" );
-			ResultSet res = stm.executeQuery();
-			if(res.next()) {
-				String pass = res.getString(5);
-				System.out.println("password: " + pass);
-				if(pass.equals(password)) {
-					return true;
-				}else {
-					return false;
-				}
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+	
+	
 	
 	public static boolean registerDevice(String gid, int slotno) {
 		
-		Connection con;
 		try {
-			con = getConnection();
-			PreparedStatement statement = con.prepareStatement("INSERT INTO geraet (geraetname, slotnummer) values(\'"+ gid + "\'," + slotno + ");");
+			
+			PreparedStatement statement = conn.prepareStatement("INSERT INTO geraet (geraetname, slotnummer) values(\'"+ gid + "\'," + slotno + ");");
 			
 			ResultSet result = statement.executeQuery();
 			System.out.println("result from insert into: " + result);
@@ -147,7 +157,7 @@ public class DBConnection {
 			return result.next();
 			
 			
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch ( SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -155,7 +165,7 @@ public class DBConnection {
 		return false;
 	}
 	
-	/*
+	
 	public static ArrayList<String> showTableperson() throws Exception{
 		try {
 			Connection conn = getConnection();
@@ -197,15 +207,17 @@ public class DBConnection {
 		return null ;
 		
 		}
-	*/
-	public static void main(String[] args) throws Exception {
 		
-		getConnection() ;
-		insertData() ;
-	//	deleteData();
-	//  updateData();
-	//	showTableperson();
+		public static void main(String[] args) throws Exception {
 		
+			getConnection() ;
+			insertData() ;
+		//	deleteData();
+		//  updateData();
+		//	showTableperson();
+			
 	}
+	*/
+	
 
 }

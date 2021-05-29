@@ -15,9 +15,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="736.0" prefWidth="1110.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.registerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="1000.0" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.registerController">
    <children>
-      <Label id="type" alignment="CENTER" layoutY="53.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="GERÄTE REGISTRIERUNG" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+      <Label id="type" alignment="CENTER" layoutY="53.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="PRÜFLINGE REGISTRIERUNG" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
          <font>
             <Font name="Apple Braille" size="24.0" />
          </font>
@@ -34,19 +34,19 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="504.0" prefWidth="457.0" spacing="30.0">
                      <children>
-                        <Label fx:id="labelMsg" prefHeight="21.0" prefWidth="280.0" text="Registrieren Sie Geräte in Slots. " textFill="RED" />
+                        <Label fx:id="labelMsg" alignment="CENTER" prefHeight="21.0" prefWidth="458.0" text="Registrieren Sie Prüflinge in Slots. " textAlignment="CENTER" textFill="#50eb77" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                  <children>
                                     <Label minHeight="40.0" minWidth="100.0" prefHeight="40.0" prefWidth="100.0" text="Slotnummer:" textFill="WHITE" />
-                                    <Label prefHeight="40.0" prefWidth="100.0" text="Gerät-ID:" textFill="WHITE" />
+                                    <Label prefHeight="40.0" prefWidth="100.0" text="Prüfling-ID:" textFill="WHITE" />
                                  </children>
                               </VBox>
                               <VBox alignment="CENTER" prefHeight="100.0" prefWidth="189.0">
                                  <children>
                                     <Label fx:id="labelSlot" prefHeight="30.0" prefWidth="190.0" textFill="WHITE" />
-                                    <TextField fx:id="geraetText" prefHeight="30.0" prefWidth="190.0">
+                                    <TextField fx:id="geraetText" prefHeight="30.0" prefWidth="190.0" promptText="Prüfling-ID">
                                        <font>
                                           <Font name="Apple Braille" size="13.0" />
                                        </font>
@@ -67,11 +67,11 @@
                         </VBox>
                         <VBox fx:id="editVbox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label alignment="CENTER" prefHeight="21.0" prefWidth="407.0" text="Wählen Sie einen Steckplatz aus, der geändert werden soll." textFill="RED" />
+                              <Label alignment="CENTER" prefHeight="21.0" prefWidth="460.0" text="Wählen Sie einen Slot aus, der geändert werden soll." textAlignment="CENTER" textFill="#50eb77" />
                               <HBox alignment="CENTER" prefHeight="81.0" prefWidth="351.0" spacing="10.0">
                                  <children>
                                     <ChoiceBox fx:id="slotEdit" prefHeight="31.0" prefWidth="110.0" />
-                                    <TextField fx:id="geraetEdit" prefHeight="31.0" prefWidth="213.0" />
+                                    <TextField fx:id="geraetEdit" prefHeight="31.0" prefWidth="213.0" promptText="Prüfling-ID" />
                                  </children>
                               </HBox>
                               <Button fx:id="setButton" mnemonicParsing="false" onAction="#onSetEdit" prefHeight="31.0" prefWidth="218.0" text="ÄNDERN" />
@@ -84,8 +84,8 @@
                   </VBox>
                   <TableView fx:id="slotTable" maxHeight="600.0" maxWidth="600.0" minHeight="500.0" minWidth="500.0" prefHeight="500.0" prefWidth="500.0">
                     <columns>
-                      <TableColumn fx:id="slotColumn" prefWidth="155.0" sortable="false" text="Slotnummer" />
-                      <TableColumn fx:id="geraeteColumn" prefWidth="372.0" sortable="false" text="Prüfling-ID" />
+                      <TableColumn fx:id="slotColumn" prefWidth="155.0" text="Slotnummer" />
+                      <TableColumn fx:id="geraeteColumn" prefWidth="372.0" text="Prüfling-ID" />
                     </columns>
                      <HBox.margin>
                         <Insets bottom="20.0" right="30.0" top="10.0" />

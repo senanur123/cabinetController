@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import DatabaseCM.Geraet;
 import cabinetController.Client;
@@ -15,7 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,7 +24,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class validationScreenController implements Initializable{
@@ -53,12 +53,34 @@ public class validationScreenController implements Initializable{
 	int failure = 0;
 	
 	static ObservableList<Geraet> olState;
+
+	String burninmsg;
+
+	
+	String sMsg;
+	String currentTemp;
+	
+	private final static validationScreenController instance = new validationScreenController();
+	
+	public validationScreenController() {
+		
+	}
+	public static validationScreenController getInstance() {
+		return instance;
+	}
+	
+	public String getCurrentTemp() {
+		return currentTemp;
+	}
+	
+	
 	
 
 	public void onTest(ActionEvent e) throws IOException {
 		
 		toServer.println("STRTPRE|" + failure);
 		String msg1 = fromServer.readLine();
+		System.out.println("strtpre server msg: " + msg1);
 		pingDevices(ol);
 
 	}
@@ -73,6 +95,7 @@ public class validationScreenController implements Initializable{
 		for(int i=1; i<ol.size()+1;i++) {
 			
 			String gid=ol.get(i-1).getGeraetid();
+			System.out.println("the gerat to pretest: " + gid);
 			preMsg = "PRETST|" + i;
 			toServer.println(preMsg);
 			long start = System.nanoTime();
@@ -99,13 +122,27 @@ public class validationScreenController implements Initializable{
 		endPreTest();
 		
 	}
-
+	
+	
+	
 	private void endPreTest() throws IOException {
 		endPre = "ENDPRE";
 		toServer.println(endPre);
 		String msg = fromServer.readLine();
 		if(msg.contains("Ready")) {
 			System.out.println("pretest successful!");
+			burninmsg = "STRTBURNIN";
+			toServer.println(burninmsg);
+			sMsg = fromServer.readLine();
+			System.out.println("burnin return msg from server: " + sMsg);
+			
+			// Starting BURN-IN Test with actual room temperature of <<<14.011167>>>
+			Pattern p = Pattern.compile("Starting BURN-IN Test with actual room temperature of <<<(\\d+\\.\\d+)>>>");
+		    Matcher m = p.matcher(sMsg);
+		    m.find();
+		    currentTemp = m.group(1);
+		    System.out.println("currentTemp: "+currentTemp);
+		
 			
 			try {
 				Stage stage = (Stage) testButton.getScene().getWindow();
@@ -135,6 +172,7 @@ public class validationScreenController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
+		labelDate.setText(java.time.LocalDate.now().toString());
 		
 		slotColumn.setCellValueFactory(new PropertyValueFactory<>("slotno"));
 		geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("geraetid"));
