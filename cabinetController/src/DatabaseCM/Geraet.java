@@ -4,10 +4,16 @@ public class Geraet {
 	
 	public String geraetid;
 	public int slotno;
+	public boolean failed;
 	
 	public Geraet(int slotno, String gid) {
 		this.slotno = slotno;
 		this.geraetid = gid;
+	}
+	
+	public Geraet(String gid, boolean failed) {
+		this.geraetid = gid;
+		this.failed = failed;
 	}
 	
 	public String getGeraetid() {

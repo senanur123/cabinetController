@@ -35,7 +35,7 @@
                   <VBox alignment="CENTER" prefHeight="504.0" prefWidth="457.0" spacing="30.0">
                      <children>
                         <Label fx:id="labelMsg" prefHeight="21.0" prefWidth="280.0" text="Registrieren Sie Geräte in Slots. " textFill="RED" />
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                  <children>
@@ -56,12 +56,12 @@
                                     </TextField>
                                  </children>
                               </VBox>
+                              <Button fx:id="registerButton" mnemonicParsing="false" onAction="#onRegister" prefHeight="38.0" prefWidth="65.0" text="OK" />
                            </children>
                         </HBox>
                         <VBox alignment="CENTER" prefHeight="118.0" prefWidth="326.0" spacing="20.0">
                            <children>
-                              <Button fx:id="registerButton" mnemonicParsing="false" onAction="#onRegister" prefHeight="38.0" prefWidth="190.0" text="REGISTRIEREN" />
-                              <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStart" prefHeight="36.0" prefWidth="192.0" text="TEST START" />
+                              <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStart" prefHeight="38.0" prefWidth="219.0" text="REGISTRIERUNG BESTÄTIGEN" />
                               <Button fx:id="editButton" layoutX="90.0" layoutY="80.0" mnemonicParsing="false" onAction="#onEdit" prefHeight="36.0" prefWidth="192.0" text="TABELLE BEARBEITEN" />
                            </children>
                         </VBox>
@@ -74,7 +74,7 @@
                                     <TextField fx:id="geraetEdit" prefHeight="31.0" prefWidth="213.0" />
                                  </children>
                               </HBox>
-                              <Button fx:id="setButton" mnemonicParsing="false" onAction="#onSetEdit" prefHeight="31.0" prefWidth="218.0" text="NEUEN WERT EINSTELLEN" />
+                              <Button fx:id="setButton" mnemonicParsing="false" onAction="#onSetEdit" prefHeight="31.0" prefWidth="218.0" text="ÄNDERN" />
                            </children>
                         </VBox>
                      </children>
@@ -82,10 +82,10 @@
                         <Insets left="50.0" right="50.0" />
                      </HBox.margin>
                   </VBox>
-                  <TableView fx:id="slotTable" maxHeight="600.0" maxWidth="700.0" prefHeight="474.0" prefWidth="600.0">
+                  <TableView fx:id="slotTable" maxHeight="600.0" maxWidth="600.0" minHeight="500.0" minWidth="500.0" prefHeight="500.0" prefWidth="500.0">
                     <columns>
-                      <TableColumn fx:id="slotColumn" prefWidth="155.0" text="Slotnummer" />
-                      <TableColumn fx:id="geraeteColumn" prefWidth="334.0" text="Geräte-ID" />
+                      <TableColumn fx:id="slotColumn" prefWidth="155.0" sortable="false" text="Slotnummer" />
+                      <TableColumn fx:id="geraeteColumn" prefWidth="372.0" sortable="false" text="Prüfling-ID" />
                     </columns>
                      <HBox.margin>
                         <Insets bottom="20.0" right="30.0" top="10.0" />

@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 import cabinetController.CabinetMock;
+import cabinetController.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +43,7 @@ public class initializationController implements Initializable {
 	@FXML
 	private TextField pingText;
 	
-	Socket sock;
+	static Socket sock;
 	PrintWriter toServer;
 	BufferedReader fromServer;
 	
@@ -56,20 +57,33 @@ public class initializationController implements Initializable {
 	
 	String userInput = "";
 	String message = "";
+
+	private final static initializationController instance = new initializationController();
 	
+	public initializationController() {
+		
+	}
+
+    public static initializationController getInstance() {
+        return instance;
+    }
+    
+    public int getPing() {
+		return ping;
+	}
+
 	
 	public void begin_b(ActionEvent e){
 		try {
-			sock = new Socket(InetAddress.getLocalHost(), 17);
-			toServer = new PrintWriter(sock.getOutputStream(), true);
-			fromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+			sock = Client.getInstance().getSocket();
+			toServer = Client.getInstance().getToServer();
+			fromServer = Client.getInstance().getFromServer();
 			
 			if(sock==null) {
+				System.out.println("Socket didnt work!");
 				labelInit.setText("Server Verbindung gescheitert!");
-				 Thread.sleep(5000);
 			}else {
 				labelInit.setText("Server Verbindung erfolgreich!");
-				 Thread.sleep(5000);
 			}
 			
 			cabinetName = cabinetText.getText().toString();
@@ -79,7 +93,7 @@ public class initializationController implements Initializable {
 			ping = Integer.parseInt(pingText.getText());
 			
 			String strtMsg = "STRT|" + cabinetName +"|"+ fullName+ "|" + privilege + "|" + failureRate + "|" + ping;
-        	//System.out.println("Start message: " + strtMsg);
+
 			
         	userInput = strtMsg;
       	    
@@ -139,4 +153,5 @@ public class initializationController implements Initializable {
 		}
  	    
 	}
+
 }
