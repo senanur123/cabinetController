@@ -35,8 +35,36 @@ public class loginController implements Initializable {
 	@FXML
 	private Label labelLogin;
 
+	String username;
+	String privilege;
 	
 	Connection con;
+	
+	private final static loginController instance = new loginController();
+	
+	public loginController() {
+		
+	}
+
+    public static loginController getInstance() {
+        return instance;
+    }
+    
+    public String getUsername() {
+		return username;
+	}
+    
+    public String getPrivilege() {
+  		return privilege;
+  	}
+    
+    public void setUsername(String username) {
+		this.username = username;
+	}
+    
+    public void setPrivilege(String privilege) {
+  		this.privilege = privilege;
+  	}
 	
 	public void loginAction(ActionEvent e) throws IOException {
 		
@@ -54,6 +82,11 @@ public class loginController implements Initializable {
 				loginSuccess = DBConnection.getPerson(username, password);
 				
 				if(loginSuccess) {
+					
+					loginController.getInstance().setUsername(username); 
+				
+					loginController.getInstance().setPrivilege(DBConnection.getInstance().getPrivilege(username)); 
+					
 					Stage stage = (Stage)loginButton.getScene().getWindow();
 					AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("initialization.fxml")); 
 					stage.setScene(new Scene(root));

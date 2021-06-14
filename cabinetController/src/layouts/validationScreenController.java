@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import DatabaseCM.DBConnection;
 import DatabaseCM.Geraet;
 import cabinetController.Client;
 import javafx.collections.ObservableList;
@@ -50,15 +51,16 @@ public class validationScreenController implements Initializable{
 	PrintWriter toServer;
 	BufferedReader fromServer;
 	
-	int failure = 0;
+	int failure = 25;
 	
 	static ObservableList<Geraet> olState;
 
 	String burninmsg;
 
-	
 	String sMsg;
 	String currentTemp;
+	
+	int testNo;
 	
 	private final static validationScreenController instance = new validationScreenController();
 	
@@ -73,7 +75,13 @@ public class validationScreenController implements Initializable{
 		return currentTemp;
 	}
 	
+	public void setTestNo(int testNo) {
+		this.testNo = testNo;
+	}
 	
+	public int getTestNo() {
+		return testNo;
+	}
 	
 
 	public void onTest(ActionEvent e) throws IOException {
@@ -90,7 +98,7 @@ public class validationScreenController implements Initializable{
 	String endPre = "";
 
 	private void pingDevices(ObservableList<Geraet> ol2) throws IOException {
-		ping = initializationController.getInstance().getPing();
+		
 		
 		for(int i=1; i<ol.size()+1;i++) {
 			
@@ -98,22 +106,13 @@ public class validationScreenController implements Initializable{
 			System.out.println("the gerat to pretest: " + gid);
 			preMsg = "PRETST|" + i;
 			toServer.println(preMsg);
-			long start = System.nanoTime();
 			String msg = fromServer.readLine();
-			long finish = System.nanoTime();
-			long timeElapsed = (finish - start)/1000000;
 			System.out.println("msg from server : " + msg);
 			
-			if(msg.contains("N")) {
-				// NOK
+			if(msg.contains("NOK")) {
+			
 				System.out.println("device failed");
 				ol.remove(i);
-			}else{
-				// OK
-			
-				if(timeElapsed>ping) {
-					ol.remove(i);
-				}
 			}
 			
 		}
@@ -173,6 +172,10 @@ public class validationScreenController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		labelDate.setText(java.time.LocalDate.now().toString());
+		int test = DBConnection.getInstance().getTestNo(); 
+		
+		validationScreenController.getInstance().setTestNo(test);
+		labelTest.setText(String.valueOf(test));
 		
 		slotColumn.setCellValueFactory(new PropertyValueFactory<>("slotno"));
 		geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("geraetid"));

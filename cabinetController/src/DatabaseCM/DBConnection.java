@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.sql.Connection;
 
 public class DBConnection {
@@ -20,6 +21,9 @@ public class DBConnection {
 	public static void setConn(Connection conn) {
 		DBConnection.conn = conn;
 	}
+	
+	
+		
 	public DBConnection() {
 
 		try {
@@ -62,6 +66,76 @@ public class DBConnection {
 		return false;
 	}
 	
+	public String getPrivilege(String username) {
+		String rolle = "";
+		try {
+			PreparedStatement stm = conn.prepareStatement("SELECT rolle FROM person WHERE benutzername=\""+username +"\"" );
+			ResultSet res = stm.executeQuery();
+			
+			if(res.next()) {
+				rolle = res.getString(1);
+				System.out.println("rolle: " + rolle);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return rolle;
+	}
+	public int getTestNo() {
+		int testNo = -1;
+		
+		try {
+			System.out.println("hey2");
+			PreparedStatement stm = conn.prepareStatement("SELECT * FROM cabinet.testtable ORDER BY idtesttable DESC LIMIT 1");
+			ResultSet res = stm.executeQuery();
+			if(res.next()) {
+				System.out.println("hey3");
+				testNo = (res.getInt(1));
+				System.out.println("testno: " + testNo);
+			}
+			
+		}catch(Exception e) {
+			
+		}
+		
+		return testNo+1;
+	}
+	
+	
+	public ArrayList<String> getConfig() throws Exception{
+		try {
+			
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM testkonfiguration");
+			
+			ResultSet result = statement.executeQuery();
+			ArrayList<String> array = new ArrayList<String>();
+			int i = 0;
+			while(result.next()) {
+				
+				
+				int config = (result.getInt(1));
+				int starttemp = (result.getInt(2));
+				int zieltemp = (result.getInt(3));
+				int steigung = (result.getInt(4));
+				int zielzeit = (result.getInt(5));
+				
+				
+				array.add("SETTARGET|"+ String.valueOf(zieltemp) + "|" + String.valueOf(zielzeit) + "|3|" + String.valueOf(steigung));
+				
+				
+			}
+			return array ;
+		}catch(Exception e) {
+			
+			System.out.println(e);
+		}
+		
+		return null;
+		
+		}
 	/*
 	//	INSERT  ---Gerate
 	public static void insertData() throws Exception{

@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import cabinetController.CabinetMock;
 import cabinetController.Client;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class initializationController implements Initializable {
 	
@@ -26,21 +28,6 @@ public class initializationController implements Initializable {
 	
 	@FXML 
 	private Label labelInit;
-	
-	@FXML
-	private TextField cabinetText;
-	
-	@FXML
-	private TextField nameText;
-	
-	@FXML
-	private TextField privText;
-	
-	@FXML
-	private TextField failureText;
-	
-	@FXML
-	private TextField pingText;
 	
 	static Socket sock;
 	PrintWriter toServer;
@@ -56,6 +43,8 @@ public class initializationController implements Initializable {
 	
 	String userInput = "";
 	String message = "";
+	
+	CabinetMock cm;
 
 	private final static initializationController instance = new initializationController();
 	
@@ -67,10 +56,6 @@ public class initializationController implements Initializable {
         return instance;
     }
     
-    public int getPing() {
-		return ping;
-	}
-
 	
 	public void begin_b(ActionEvent e){
 		try {
@@ -87,21 +72,15 @@ public class initializationController implements Initializable {
 				labelInit.setText("Server Verbindung erfolgreich!");
 			}
 			
+			String username = loginController.getInstance().getUsername();
+			String privilege = loginController.getInstance().getPrivilege();
 			
-			
-			if(cabinetText.getText().isEmpty() ||  nameText.getText().isEmpty() ||privText.getText().isEmpty() || failureText.getText().isEmpty() || pingText.getText().isEmpty()) {
+			if(username.isBlank() ||  username.isEmpty() || privilege.isBlank() ||  privilege.isEmpty()) {
 				labelInit.setTextFill(Color.color(1, 0, 0));
 				labelInit.setText("Bitte füllen Sie die leere Eingaben!");
 			}else {
-				cabinetName = cabinetText.getText().toString();
-				fullName = nameText.getText().toString();
-				privilege = privText.getText().toString();
-				failureRate = Integer.parseInt(failureText.getText()) ;
-				ping = Integer.parseInt(pingText.getText());
 				
-				
-				String strtMsg = "STRT|" + cabinetName +"|"+ fullName+ "|" + privilege + "|" + failureRate + "|" + ping;
-
+				String strtMsg = "STRT|Klimaschrank 1|"+ username+ "|" + privilege + "|10|3";
 				
 	        	userInput = strtMsg;
 	      	    
@@ -122,6 +101,20 @@ public class initializationController implements Initializable {
 	    	        			stage.show();
 	    	        			stage.setMinWidth(stage.getWidth());
 	    	        	        stage.setMinHeight(stage.getHeight());
+	    	        	        
+	    	        	        stage.setOnCloseRequest((EventHandler<WindowEvent>) new EventHandler<WindowEvent>() {
+	    	        	            public void handle(WindowEvent we) {
+	    	        	                System.out.println("Stage is closingggggggggg");
+	    	        	                try {
+		    	        	               
+	    	        	                	toServer.println("STOP");
+		    	        	               
+		    	        	               
+	    	        	                }catch(Exception e) {
+	    	        	        			e.printStackTrace();
+	    	        	        		}
+	    	        	            }
+	    	        	        });
 	    	        			
 	 	        	        }else {
 	 	        				labelInit.setTextFill(Color.color(1, 0, 0));
@@ -143,19 +136,17 @@ public class initializationController implements Initializable {
 			
 			
 	}
-		
-		
-
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		try {
 			labelInit.setTextFill(Color.color(0.42, 0.92, 0.46));
-			labelInit.setText("Server wird starten...");
+			//labelInit.setText("Server wird starten...");
 			int port = 17;
-			CabinetMock cm = new CabinetMock(port);
-			cm.startServer();
 			
+			cm = new CabinetMock(port);
+			cm.startServer();
 			
 			
 		} catch (Exception e) {
