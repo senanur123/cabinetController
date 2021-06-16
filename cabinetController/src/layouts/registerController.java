@@ -73,7 +73,7 @@ public class registerController implements Initializable {
 	}
 
 	 public static registerController getInstance() {
-	        return instance;
+	       return instance;
 	 }
 	 
 	 public ObservableList<Geraet> getOl() {

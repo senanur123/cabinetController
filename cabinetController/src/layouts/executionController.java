@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import DatabaseCM.DBConnection;
+import DatabaseCM.Geraet;
 import cabinetController.Client;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -33,13 +34,16 @@ public class executionController implements Initializable {
 	
 	
 	@FXML
-    private Label labelTest, labelCurrent, phaseLabel, expLabel;
+    private Label currentTempLabel, phaseLabel, expLabel;
+	
+	@FXML
+    private Label testStartLabel, testLabel, testNoLabel, executingLabel, stufeLabel, aktTempLabel;
 	
 	@FXML
 	private ProgressBar progressBar;
 	
 	@FXML
-    private Button resultButton;
+    private Button resultButton, testStartButton;
 	
 	Socket sock;
 	PrintWriter toServer;
@@ -56,21 +60,31 @@ public class executionController implements Initializable {
 	
 	String tempMsg;
 	String sMsg;
+	int pingSize = 0;
 	
 	boolean nextTarget = false;
 	
-	int targetNo = -1;
+	int targetNo = 0;
+	
+	ObservableList<Geraet> ol;
 	
 
 	Timer timer = new Timer();
-	Timer timer2 = new Timer();
-	Timer timer3 = new Timer();
 	
 	private final static executionController instance = new executionController();
 	
 	public executionController() {
 		
 	}
+	
+	public void setOl(ObservableList<Geraet> ol) {
+		this.ol = ol;
+	}
+	
+	public ObservableList<Geraet> getOl() {
+		return ol;
+	}
+	
     public static executionController getInstance() {
         return instance;
     }
@@ -127,131 +141,138 @@ public class executionController implements Initializable {
 	double st;
 	double gt;
 	
-	class askTemp extends TimerTask {
-		
-	    public void run() {
-	    	Platform.runLater(()->{
-		    	try {
-		    		
-		    		System.out.println("TIMER START!");
-		    		toServer.println("OPERTEMP");
-					tempMsg = fromServer.readLine();
-					
-					Pattern p = Pattern.compile("OPERTEMP-RESP:(-?\\d+\\.\\d+)");
-				    Matcher m = p.matcher(tempMsg);
-				    m.find();
-				    
-			    	System.out.println("Matcher result: " + m.group(1));
-		    	 	instance.setCurrentTemp(m.group(1));
-		    	 	
-		    	 	ct = Double.parseDouble(instance.getCurrentTemp());
-		    	 	gt = Double.parseDouble(instance.getGoalTemp()); 
-		    	 	
-				    System.out.print("currentTemp1: "+ct);
-				    System.out.println("\tgoalTemp1: "+gt);
-				    
-				    changeLabel(String.valueOf(ct));
-				    
-				    if(tempCnt==0) {
-				    	progress = 0;
-				    	System.out.println("start temp to first temp of the cabinet: " + ct);
-		    			tempCnt++;
-		    			st = ct;
-		    		}
-				    
-				    if(Double.parseDouble(instance.getGoalTemp())<0) {
-				    	
-				    	System.out.print("Goal temp is below zero!");
-				    	
-				    	double rate = (Double.parseDouble(instance.getRate1()))/100;
-						
-				    	if(ct<=(gt-(gt*rate)) && ct>=(gt+(gt*rate))) {
-				    		targetNo++;
-				    		nextTarget = true;
-				    		System.out.println("Progress more than 1");
-				    		progressBar.setProgress(1);
-				    		changeLabel("Cabinet is set to " + instance.getGoalTemp() + " degrees successfully!");
-			    			timer.cancel();
-			    			pingDevices();
-			    			
-			    			progressBar.setProgress(0);
-			    			tempCnt=0;
-			    			
-			    			System.out.println("targetno is now : " + targetNo);
-			    			
-				    	}else {
-				    		nextTarget = false;
-					    	System.out.println("Goal bigger than 0!");
-					    	progress = (ct-st)/(gt-st);
-					    	progressBar.setProgress(progress);
-				    		System.out.println("the progress " + progress);
-				    	}
-				    }else {
-				    	
-						double rate = (Double.parseDouble(instance.getRate1()))/100;
-						
-				    	if(ct>=(gt-(gt*rate)) && ct<=(gt+(gt*rate))) {
-				    		targetNo++;
-				    		nextTarget = true;
-				    		System.out.println("Progress more than 1");
-				    		progressBar.setProgress(1);
-				    		changeLabel("Cabinet is set to " + instance.getGoalTemp() + " degrees successfully!");
-			    			timer.cancel();
-			    			pingDevices();
-			    			
-			    			progressBar.setProgress(0);
-			    			tempCnt=0;
-			    			
-			    			System.out.println("targetno is now : " + targetNo);
-			    			
-				    	}else {
-				    		nextTarget = false;
-					    	System.out.println("Goal bigger than 0!");
-					    	progress = (ct-st)/(gt-st);
-					    	progressBar.setProgress(progress);
-				    		System.out.println("the progress " + progress);
-				    	}
-				    	
-				    }
-				    
-		    	} catch (IOException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e1) {
-					e1.printStackTrace();
-				}
-	    	});
-	    }
-
-		
-	}
 	
-	public void setPhase(int pNo) {
-		phaseLabel.setText(String.valueOf(pNo) + "/11");
-	}
-	public void setExp(String txt) {
-		expLabel.setText(txt);
-	}
-	//ObservableList<Integer> olSuccess;
 	
-	public void pingDevices() {
-		System.out.println("heyyy PING");
-		toServer.println("STRTPING|25");
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 		try {
-			//System.out.println("after strtping: " + fromServer.readLine());
-			if(fromServer.readLine().contains("Starting STRTPING")) {
-				setExp("The devices are being pinged...");
-				for(int i=1;i<=20;i++) {
-					toServer.println("PING|"+i);
-					if(fromServer.readLine().contains("NOK")) {
-					}else {
-						// olSuccess.add(i);
-					}
-				}
-				//setTarget(configs.get(targetNo));
+			//pingSize = validationScreenController.getInstance().sizeOfTable();
+			ol = validationScreenController.getInstance().getOl();
+			instance.setOl(ol);
+			System.out.println("inside exec!");
+			for(int m = 0; m<ol.size();m++) {
+				System.out.println(m + ". element of ol: " + ol.get(m).getGeraetid());
+			}
+			int tn = validationScreenController.getInstance().getTestNo();
+			testNoLabel.setText(String.valueOf(tn));
+			configs = DBConnection.getInstance().getConfig();
+			progressBar.setProgress(0);
+			sock = Client.getInstance().getSocket();
+			toServer = Client.getInstance().getToServer();
+			fromServer = Client.getInstance().getFromServer();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void startTest() {
+		
+		try {
+			
+			toServer.println("STRTBURNIN");
+			fromServer.readLine();
+			setStartCondition();
+			
+			timer.schedule(new askTemp(), 0, 10);
+			
+			String zeroTarget = "SETTARGET|0.1|20|30|5";
+			
+			setTarget(zeroTarget);
+			
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		
+		
+	}
+	
+	
+	private void setTarget(String target) {
+		try {
+			// target = SETTARGET
+			System.out.println("inside settarget: " + target);
+			StringTokenizer tokenizer;
+			tokenizer = new StringTokenizer(target, "|");
+			
+			String targetName = (String) tokenizer.nextElement();
+			String goalTemp = (String) tokenizer.nextElement();
+			String goalTime = (String) tokenizer.nextElement();
+			String rate1 = (String) tokenizer.nextElement();
+			String rate2 = (String) tokenizer.nextElement();
+			
+			
+			if(Integer.parseInt(goalTime)>0) {
+				
+				instance.setStartTemp(goalTemp);
+				instance.setGoalTemp(goalTemp);
+				instance.setGoalTime(goalTime);
+				instance.setRate1(rate1);
+				instance.setRate2(rate2);
+				
+				toServer.println(target);
+				fromServer.readLine();
+				setExp("Schrank wird auf " + instance.getGoalTemp() + " Grad eingestellt...");
+				
 				
 				
 			}else {
-				System.out.println("STRTPING failed!");
+				System.out.println("hey");
+				System.out.println("do nothing!!!");
+				
+				//long start = System.currentTimeMillis(); // 
+				//long end = 0;
+				//long elapsedTime = 0;
+				//int a = 0;
+			
+				int time =  Math.abs(Integer.parseInt(goalTime));
+				boolean cont = true;
+				while (cont) {
+					
+					currentTempLabel.setText(String.valueOf(time));
+					
+					time-=100;
+					
+				    if (time<=0) {
+				    	cont = false;
+				        break;
+				    }
+				    
+				}
+				
+
+				System.out.println("hey2");
+				
+			}
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void pingDevices() {
+
+		toServer.println("STRTPING|25");
+		try {
+		
+			if(fromServer.readLine().contains("Starting STRTPING")) {
+				setExp("The devices are being pinged...");
+				for(int i=0;i<ol.size();i++) {
+					toServer.println("PING|"+(i+1));
+					if(fromServer.readLine().contains("NOK")) {
+						ol.get(i).setFailed(true);
+					}else {
+						System.out.println("device okay!");
+					}
+				}
+
+			}else {
+				
 			}
 			
 			
@@ -259,42 +280,18 @@ public class executionController implements Initializable {
 			e.printStackTrace();
 		}
 		
-		if(resultReg) {
-			
-			//TODO: results records to DATABASE!
-			resultButton.setVisible(true);
-		}
+		//toServer.println("STOPPING");
+		instance.setOl(ol);
 		
 		
 	}
 	
 	private void changeLabel(String currentTemp) {
-		labelCurrent.setText(currentTemp);
+		currentTempLabel.setText(currentTemp);
 	}
 
-	boolean resultReg = false;
+
 	
-	class startNext extends TimerTask {
-		public void run() {
-			Platform.runLater(()->{
-				if(nextTarget) {
-					System.out.println("Next target to run!");
-					if(targetNo>=10) {
-						timer.cancel();
-						timer3.cancel();
-						resultReg = true;
-					}else {
-						setPhase(targetNo+2);
-						setTarget(configs.get(targetNo));
-					}
-					
-					
-				}
-				
-			});
-		}
-		
-	}
 		
 	public void onResult(ActionEvent e) {
 		
@@ -319,113 +316,26 @@ public class executionController implements Initializable {
 		
 	}
 	
-	int pingSize = 0;
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		try {
-			//pingSize = validationScreenController.getInstance().sizeOfTable();
-
-			labelTest.setText(String.valueOf(validationScreenController.getInstance().getTestNo()));
-			configs = DBConnection.getInstance().getConfig();
-			resultButton.setVisible(false);
-			progressBar.setProgress(0);
-			sock = Client.getInstance().getSocket();
-			toServer = Client.getInstance().getToServer();
-			fromServer = Client.getInstance().getFromServer();
-			startTest();
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
-	private void setTarget(String target) {
-		try {
-			
-			
-			timer.cancel();
-			System.out.println("inside settarget!");
-			StringTokenizer tokenizer;
-			tokenizer = new StringTokenizer(target, "|");
-			
-			String name = (String) tokenizer.nextElement();
-			String goalTemp = (String) tokenizer.nextElement();
-			String goalTime = (String) tokenizer.nextElement();
-			String rate1 = (String) tokenizer.nextElement();
-			String rate2 = (String) tokenizer.nextElement();
-			
-			
-			
-			if(Integer.parseInt(goalTime)<0) {
-				nextTarget = false;
-				setExp("The cabinet will wait for " + Math.abs(Integer.parseInt(goalTime)) + "seconds...");
-				
-				System.out.println("is it sleeping?");
-				timer.cancel();
-				
-				long start = System.currentTimeMillis(); // 
-				long end = 0;
-				long elapsedTime = 0;
-				int a = 0;
-				boolean cont = true;
-				while (cont) {
-					
-					end = System.currentTimeMillis();
-					elapsedTime = end - start;
-					// System.out.println("elapsed: " + elapsedTime);
-				    if (elapsedTime >= Math.abs(Integer.parseInt(goalTime)) ) {
-				    	System.out.println("elapsed: " + elapsedTime);
-				    	cont = false;
-				    	targetNo++;
-				    	nextTarget = true;
-				        break;
-				    }
-				    
-				    if(a<5) {
-				    	System.out.println("a : " + a);
-				    	a++;
-				    }
-				}
-				
-				//Thread.sleep(Math.abs(Integer.parseInt(goalTime)));
-				System.out.println("done sleeping!");
-			}else {
-				
-				timer = new Timer();
-				timer.schedule(new askTemp(), 0, 200);
-				nextTarget = false;
-				instance.setStartTemp(goalTemp);
-				instance.setGoalTemp(goalTemp);
-				instance.setGoalTime(goalTime);
-				instance.setRate1(rate1);
-				instance.setRate2(rate2);
-				
-				toServer.println(target);
-				String msf = fromServer.readLine();
-				System.out.println(msf);
-				setExp("Cabinet is being set to " + instance.getGoalTemp() + "degrees...");
-				
-			}
-			
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+	public void onTestStart(ActionEvent e) {
 		
+		testStartLabel.setVisible(false);
+		testStartButton.setVisible(false);
+		testLabel.setVisible(true);
+		testNoLabel.setVisible(true);
+		executingLabel.setVisible(true);
+		progressBar.setVisible(true);
+		stufeLabel.setVisible(true);
+		expLabel.setVisible(true);
+		phaseLabel.setVisible(true);
+		aktTempLabel.setVisible(true);
+		currentTempLabel.setVisible(true);
+		
+		startTest();
 	}
 	
 	
-	public void setTimers() {
-		
-		System.out.println("INSIDE SETTIMERS. RIGHT NOW: ");
-		System.out.println("st: " + instance.getStartTemp());
-		System.out.println("ct: " + instance.getCurrentTemp());
-		System.out.println("gt: " + instance.getGoalTemp());
-		System.out.println("gt2: " + instance.getGoalTime());
-		System.out.println("r1: " + instance.getRate1());
-		System.out.println("r2: " + instance.getRate2());		
-	}
+	
 
 	public void setStartCondition() {
 		
@@ -438,27 +348,143 @@ public class executionController implements Initializable {
 	}
 
 	
-	private void startTest() {
-		
-		try {
+	
+	
 
-			setStartCondition();
-			
-			
-			timer.schedule(new askTemp(), 0, 200);
-			timer3.schedule(new startNext(), 0, 3000);
-			String zeroTarget = "SETTARGET|0.5|50|30|5";
-			setTarget(zeroTarget);
-			setPhase(1);
-			nextTarget = false;
-			//System.out.println("zero target is accomplished!");
-			
-			
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+	
+	class askTemp extends TimerTask {
 		
-		
+	    public void run() {
+	    	Platform.runLater(()->{
+		    	try {
+		    		
+		    		if((Integer.parseInt(instance.getGoalTime()))<=0) {
+		    			setExp("Der Schrank wartet " + Math.abs(Integer.parseInt(instance.getGoalTime())) + " Sekunden...");
+		    		}else { // goaltime >0
+		    			toServer.println("OPERTEMP");
+						tempMsg = fromServer.readLine();
+						
+						Pattern p = Pattern.compile("OPERTEMP-RESP:(-?\\d+\\.\\d+)");
+					    Matcher m = p.matcher(tempMsg);
+					    m.find();
+					    
+					    //System.out.println("Matcher result: " + m.group(1));
+			    	 	instance.setCurrentTemp(m.group(1));
+			    	 	
+			    	 	ct = Double.parseDouble(instance.getCurrentTemp());
+			    	 	gt = Double.parseDouble(instance.getGoalTemp()); 
+			    	 	
+			    	 	
+			    	 	changeLabel(String.valueOf(ct));
+			    	 	
+			    	 	
+			    	 	 if(tempCnt==0) {
+			    	 		 
+					    	progress = 0;
+					    	progressBar.setProgress(progress);
+			    			tempCnt++;
+			    			st = ct;
+			    	 	 }
+			    	 	 
+			    	 	if(Double.parseDouble(instance.getGoalTemp())<0) {
+					    	
+					    	//System.out.print("Goal temp is below zero!");
+					    	
+					    	double rate = (Double.parseDouble(instance.getRate1()))/100;
+							
+					    	if(ct<=(gt-(gt*rate)) && ct>=(gt+(gt*rate))) {
+					    		
+					    		changeLabel("Schrank ist erfolgreich auf " + instance.getGoalTemp() +   " Grad eingestellt!");
+					    		progressBar.setProgress(1);
+					    		tempCnt=0;
+					    		progressBar.setProgress(1);
+					    		progress = 0;
+					    		
+					    		if(targetNo>=10) {
+					    			timer.cancel();
+					    			progressBar.setProgress(1);
+					    			changeLabel("Test beendet!");
+				    			}else{
+				    				pingDevices();					  //  0,
+				    				setTarget(configs.get(targetNo)); //  0, 
+				    												  // 70, 
+			    					setPhase(targetNo); 			  //  0, 
+			    					
+	
+				    			}
+					    		
+					    		
+				    			targetNo++; 					      //  1, 
+				    		
+				    			
+					    	}else {
+					    		
+						    	progress = (ct-st)/(gt-st);
+						    	progressBar.setProgress(progress);
+						    	System.out.println("the progress " + progress);
+					    	}
+					    }
+			    	 	
+			    	 	
+			    	 	else { // for 0.1 targetno=0;
+					    	
+							double rate = (Double.parseDouble(instance.getRate1()))/100;
+							
+					    	if(ct>=(gt-(gt*rate)) && ct<=(gt+(gt*rate))) {
+					    		
+					    		changeLabel("Schrank ist erfolgreich auf " + instance.getGoalTemp() +   " Grad eingestellt!");
+					    		progressBar.setProgress(1);
+					    		tempCnt=0;
+					    		progressBar.setProgress(1);
+					    		progress = 0;
+					    		
+					    		if(targetNo>=10) {
+					    			pingDevices();
+					    			timer.cancel();
+					    			progressBar.setProgress(1);
+					    			changeLabel("Test beendet!");
+					    			resultButton.setVisible(true);
+				    			}else{
+				    				pingDevices();					  //  0,
+				    				setTarget(configs.get(targetNo)); //  0, 
+				    												  // 70, 
+			    					setPhase(targetNo); 			  //  0, 
+			    					
+	
+				    			}
+					    		
+					    		
+				    			targetNo++; 					      //  1, 
+				    							      //  1, 
+				    			
+					    	}else {
+						    	progress = Math.abs((ct-st)/(gt-st));
+						    	progressBar.setProgress(progress);
+						    	System.out.println("the progress " + progress);
+					    	}
+		    		}
+				    	
+				    }
+				    
+		    	} catch (IOException e) {
+					e.printStackTrace();
+				} catch (IllegalStateException e1) {
+					e1.printStackTrace();
+				}
+	    	});
+	    }
+
 		
 	}
+
+
+
+	public void setPhase(int pNo) {
+		phaseLabel.setText(String.valueOf(pNo) + "/9");
+	}
+	public void setExp(String txt) {
+		expLabel.setText(txt);
+	}
+
+	
 }

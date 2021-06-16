@@ -2,18 +2,14 @@ package DatabaseCM;
 
 public class Geraet {
 	
-	public String geraetid;
-	public int slotno;
-	public boolean failed;
+	private String geraetid;
+	private int slotno;
+	private boolean failed;
 	
 	public Geraet(int slotno, String gid) {
 		this.slotno = slotno;
 		this.geraetid = gid;
-	}
-	
-	public Geraet(String gid, boolean failed) {
-		this.geraetid = gid;
-		this.failed = failed;
+		this.failed = true;
 	}
 	
 	public String getGeraetid() {
@@ -28,6 +24,13 @@ public class Geraet {
 	}
 	public void setSlotno(int slotno) {
 		this.slotno = slotno;
+	}
+	
+	public boolean getFailed() {
+		return this.failed;
+	}
+	public void setFailed(boolean failed) {
+		this.failed = failed;
 	}
 
 }

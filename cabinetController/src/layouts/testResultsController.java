@@ -2,10 +2,15 @@ package layouts;
 
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+import DatabaseCM.Geraet;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,7 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class testResultsController {
+public class testResultsController implements Initializable{
 	
 	@FXML
 	private Button allenButton, gescheiterteButton;
@@ -65,6 +70,16 @@ public class testResultsController {
 			e1.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		ObservableList<Geraet> ol = executionController.getInstance().getOl();
+		for(int k=0;k<ol.size();k++) {
+			System.out.println("the " + k + ". element of ol: " + ol.get(k).getGeraetid());
+		}
+		
+		
 	}
 
 	}

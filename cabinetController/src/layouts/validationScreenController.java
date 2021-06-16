@@ -45,7 +45,7 @@ public class validationScreenController implements Initializable{
 	@FXML
 	private TableColumn<Geraet, String> geraeteColumn;
 	
-	static ObservableList<Geraet> ol;
+	ObservableList<Geraet> ol;
 	
 	Socket sock;
 	PrintWriter toServer;
@@ -83,6 +83,14 @@ public class validationScreenController implements Initializable{
 		return testNo;
 	}
 	
+	public ObservableList<Geraet> getOl(){
+		return ol;
+	}
+	
+	public void setOl(ObservableList<Geraet> ol){
+		this.ol = ol;
+	}
+	
 
 	public void onTest(ActionEvent e) throws IOException {
 		
@@ -100,24 +108,25 @@ public class validationScreenController implements Initializable{
 	private void pingDevices(ObservableList<Geraet> ol2) throws IOException {
 		
 		
-		for(int i=1; i<ol.size()+1;i++) {
+		for(int i=0; i<ol.size();i++) { // 0 to 5
 			
-			String gid=ol.get(i-1).getGeraetid();
+			String gid=ol.get(i).getGeraetid();
 			System.out.println("the gerat to pretest: " + gid);
-			preMsg = "PRETST|" + i;
+			preMsg = "PRETST|" + (i+1);
 			toServer.println(preMsg);
 			String msg = fromServer.readLine();
-			System.out.println("msg from server : " + msg);
+			
 			
 			if(msg.contains("NOK")) {
 			
-				System.out.println("device failed");
-				ol.remove(i);
+				
+			}else {
+				ol.get(i).setFailed(false);
 			}
 			
 		}
 		
-		
+		instance.setOl(ol);
 		endPreTest();
 		
 	}
@@ -130,18 +139,7 @@ public class validationScreenController implements Initializable{
 		String msg = fromServer.readLine();
 		if(msg.contains("Ready")) {
 			System.out.println("pretest successful!");
-			burninmsg = "STRTBURNIN";
-			toServer.println(burninmsg);
-			sMsg = fromServer.readLine();
-			System.out.println("burnin return msg from server: " + sMsg);
 			
-			// Starting BURN-IN Test with actual room temperature of <<<14.011167>>>
-			Pattern p = Pattern.compile("Starting BURN-IN Test with actual room temperature of <<<(\\d+\\.\\d+)>>>");
-		    Matcher m = p.matcher(sMsg);
-		    m.find();
-		    currentTemp = m.group(1);
-		    System.out.println("currentTemp: "+currentTemp);
-		
 			
 			try {
 				Stage stage = (Stage) testButton.getScene().getWindow();
@@ -180,7 +178,7 @@ public class validationScreenController implements Initializable{
 		slotColumn.setCellValueFactory(new PropertyValueFactory<>("slotno"));
 		geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("geraetid"));
 		
-		ol = registerController.getInstance().getOl();
+		ol = registerController.getInstance().getOl(); 
 		slotTable.getItems().addAll(ol);
 		
 		sock = Client.getInstance().getSocket();
