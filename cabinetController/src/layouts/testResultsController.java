@@ -10,17 +10,24 @@ import DatabaseCM.Device;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class testResultsController implements Initializable{
 	
 	@FXML
 	private Button saveButton, endButton;
+	
+	@FXML
+	private Label dateLabel, userLabel;
 	
 	@FXML
 	private TableView<Device> resultTable;
@@ -56,12 +63,20 @@ public class testResultsController implements Initializable{
 		Stage stage = (Stage) endButton.getScene().getWindow();
 	    stage.close();
 	}
+	
+	
+
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 	
-		user = loginController.getInstance().getUsername();
+		
 		date = LocalDate.now();
+		user = loginController.getInstance().getUsername();
+		
+		userLabel.setText(user);
+		dateLabel.setText(date.toString());
+		
 		test = DBConnection.getInstance().getTestNo(); 
 		
 		deviceIdColumn.setCellValueFactory(new PropertyValueFactory<>("deviceid"));
