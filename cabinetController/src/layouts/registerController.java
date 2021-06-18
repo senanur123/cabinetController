@@ -6,7 +6,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
-import DatabaseCM.Geraet;
+
+import DatabaseCM.DBConnection;
+import DatabaseCM.Device;
 import cabinetController.Client;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -39,13 +41,13 @@ public class registerController implements Initializable {
     private TextField geraetText, geraetEdit;
 	
 	@FXML
-	private TableView<Geraet> slotTable;
+	private TableView<Device> slotTable;
 	
 	@FXML
-	private TableColumn<Geraet, Integer> slotColumn;
+	private TableColumn<Device, Integer> slotColumn;
 
 	@FXML
-	private TableColumn<Geraet, String> geraeteColumn;
+	private TableColumn<Device, String> geraeteColumn;
 	
 	@FXML
 	private VBox editVbox;
@@ -53,7 +55,7 @@ public class registerController implements Initializable {
 	@FXML
 	private ChoiceBox<Integer> slotEdit;
 	
-	static ObservableList<Geraet> ol;
+	static ObservableList<Device> ol;
 	int selectedSlot;
 	
 	String geraeteid;
@@ -76,7 +78,7 @@ public class registerController implements Initializable {
 	       return instance;
 	 }
 	 
-	 public ObservableList<Geraet> getOl() {
+	 public ObservableList<Device> getOl() {
 		return ol;
 	}
 	 
@@ -110,7 +112,7 @@ public class registerController implements Initializable {
 		String gerid = geraetEdit.getText();
 		
 		slotTable.getItems().remove(slot-1);
-		slotTable.getItems().add(new Geraet(slot, gerid));
+		slotTable.getItems().add(new Device(slot, gerid));
 		
 		
 		slotColumn.setSortType(SortType.ASCENDING);
@@ -137,11 +139,11 @@ public class registerController implements Initializable {
 			}else {
 				int slot = counter;
 				geraetText.setText(null);
-			
+				
 				if(initDevice(slot, gid)) {
 					slotColumn.setCellValueFactory(new PropertyValueFactory<>("slotno"));
-					geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("geraetid"));
-					slotTable.getItems().add(new Geraet(counter, gid));
+					geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("deviceid"));
+					slotTable.getItems().add(new Device(counter, gid));
 					setChoice(counter);
 					counter++;
 					labelMsg.setTextFill(Color.color(0.42, 0.92, 0.46));
@@ -173,26 +175,32 @@ public class registerController implements Initializable {
 	
 	public boolean initDevice(int slotno, String deviceid) {
 		try {
-			initMsg = "INIT|"+slotno + "|"+deviceid;
-			if(sock==null) {
-				System.out.println("Socket null!");
-				return false;
+			
+			if(!DBConnection.getInstance().getInstance().isRegistered(deviceid)) {
+				// can be initialised!
+				initMsg = "INIT|"+slotno + "|"+deviceid;
+				if(sock==null) {
+					System.out.println("Socket null!");
+					return false;
+				}else {
+					toServer.println(initMsg); // starting the server!
+		  	        String serverMsg = fromServer.readLine();
+		  	        
+		  	        if(serverMsg.contains("Ignoring")) {
+		  	        	labelMsg.setTextFill(Color.color(1, 0, 0));
+		  	        	labelMsg.setText("Ein Gerät kann nicht mehrmals registriert werden!");
+		  	        	return false;
+		  	        }else{
+		  	        	return true;
+		  	        }
+		  	        
+				}
 			}else {
-				toServer.println(initMsg); // starting the server!
-	  	        String serverMsg = fromServer.readLine();
-	  	        
-	  	        if(serverMsg.contains("Ignoring")) {
-	  	        	labelMsg.setTextFill(Color.color(1, 0, 0));
-	  	        	labelMsg.setText("Ein Gerät kann nicht mehrmals registriert werden!");
-	  	        	return false;
-	  	        }else{
-	  	        	return true;
-	  	        }
-	  	        
+				labelMsg.setTextFill(Color.color(1, 0, 0));
+  	        	labelMsg.setText("Das Gerät war schon getestet!");
+  	        	return false;
+				
 			}
-			
-			
-			
 			
 		}catch(Exception e) {
 			e.printStackTrace();

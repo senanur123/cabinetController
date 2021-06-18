@@ -4,7 +4,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.sql.Connection;
 
 public class DBConnection {
@@ -89,11 +92,11 @@ public class DBConnection {
 		
 		try {
 			System.out.println("hey2");
-			PreparedStatement stm = conn.prepareStatement("SELECT * FROM cabinet.testtable ORDER BY idtesttable DESC LIMIT 1");
+			PreparedStatement stm = conn.prepareStatement("SELECT * FROM results ORDER BY testNo DESC LIMIT 1");
 			ResultSet res = stm.executeQuery();
 			if(res.next()) {
 				System.out.println("hey3");
-				testNo = (res.getInt(1));
+				testNo = (res.getInt(2));
 				System.out.println("testno: " + testNo);
 			}
 			
@@ -104,6 +107,94 @@ public class DBConnection {
 		return testNo+1;
 	}
 	
+	public boolean isRegistered(String deviceName) {
+		boolean reg = false;
+		
+		try {
+			System.out.println("reg control");
+			PreparedStatement stm = conn.prepareStatement("SELECT * FROM device where deviceName=\'" + deviceName + "\'");
+			ResultSet res = stm.executeQuery();
+			if(res.next()) {
+				System.out.println("theres such device!");
+				reg = true;
+			}else {
+				System.out.println("theres no such device!");
+				reg = false;
+			}
+			
+		}catch(Exception e) {
+			
+		}
+		
+		
+		return reg;
+	}
+	
+	public void insertD() {
+		String query = "insert into cabinet.device (deviceName, success) values ('prdeneme2', b'0')";
+		
+		try {
+			PreparedStatement stm = conn.prepareStatement(query);
+			stm.execute();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public void insertDevice(String deviceName, boolean success) {
+		System.out.println("inside insertdevice!! ");
+		System.out.println("device: "+ deviceName + " " + success);
+		
+		
+		try{
+			
+			String query = "INSERT INTO cabinet.device (deviceName, success) VALUES (?,?)";
+			PreparedStatement stm = conn.prepareStatement(query);
+			
+			stm.setString(1, deviceName);
+			stm.setBoolean(2, success);
+			
+			stm.execute();
+			
+		}catch(Exception e) {
+			
+		}	
+		
+	}
+	
+	
+	
+	
+	public void insertTest(int testNo, int slotNo, String deviceName, boolean success, String username, LocalDate date) {
+		
+		System.out.println("inside inserttest ");
+		System.out.println("tno: " + testNo + " " + slotNo + " " + deviceName + " " + success  + " " + username + " " + date);
+	
+		Date d = Date.valueOf(date);
+		
+		
+		try{
+			
+			String query = "INSERT INTO results (testNo, slotNo, deviceID, success, user, date) VALUES (?,?,?,?,?,?)";
+			PreparedStatement stm = conn.prepareStatement(query);
+			
+			stm.setInt(1, testNo);
+			stm.setInt(2, slotNo);
+			stm.setString(3, deviceName);
+			stm.setBoolean(4, success);
+			stm.setString(5, username);
+			stm.setDate(6, d);
+			
+			stm.execute();
+			
+		}catch(Exception e) {
+			
+		}	
+		
+	}
+	
 	
 	public ArrayList<String> getConfig() throws Exception{
 		try {
@@ -112,7 +203,7 @@ public class DBConnection {
 			
 			ResultSet result = statement.executeQuery();
 			ArrayList<String> array = new ArrayList<String>();
-			int i = 0;
+		
 			while(result.next()) {
 				
 				
@@ -136,162 +227,4 @@ public class DBConnection {
 		return null;
 		
 		}
-	/*
-	//	INSERT  ---Gerate
-	public static void insertData() throws Exception{
-		
-		Scanner scan = new Scanner(System.in) ;
-		System.out.println("Person ismini giriniz:");
-		final String nameperson = scan.next() ;
-		System.out.println("Soyismini giriniz:") ;
-		final String nachname = scan.next();
-		System.out.println("Kullanici adini giriniz:") ;
-		final String benutzername = scan.next() ;
-		System.out.println("Sifre giriniz:") ;
-		final String passwort = scan.next();
-		System.out.println("Kullanici active/inactive giriniz:") ;
-		final String status = scan.next();
-		System.out.println("Kullanici rolle giriniz:") ;
-		final String rolle = scan.next();
-		
-		try {
-			
-			
-			PreparedStatement posted = conn.prepareStatement("INSERT INTO person (nameperson, nachname, benutzername, passwort, status, rolle) VALUES ('"+nameperson+"' ,'"+nachname+"' ,'"+benutzername+"' ,'"+passwort+"' ,'"+status+"' , '"+rolle+"')");
-			posted.executeUpdate();
-		}
-		catch(Exception e) {
-			
-			System.out.println("Veri eklenemedi."+e) ;
-		}
-		finally {
-			
-			System.out.println("Veri eklendi.") ;
-		}
-		
-	}
-	
-	//	DELETE
-	public static void deleteData() throws Exception{
-		Scanner scan = new Scanner(System.in) ;
-		System.out.println("Person ismini giriniz:");
-		final String nameperson = scan.next() ;
-		
-		try {
-	
-			PreparedStatement posted = conn.prepareStatement("DELETE FROM person WHERE nameperson = ' "+ nameperson +" ' ;");
-			posted.setString(1, nameperson);
-			posted.executeUpdate();
-		}
-		catch(Exception e) {
-			
-			System.out.println("Veri silinemedi."+e) ;
-		}
-		finally {
-			
-			System.out.println("Veri silindi.") ;
-		}
-		
-	}
-	
-	//	UPDATE
-	public static void updateData() throws Exception{
-		Scanner scan = new Scanner(System.in) ;
-		System.out.println("Person ismini giriniz:");
-		final String nameperson = scan.next() ;
-		
-		try {
-			PreparedStatement posted = conn.prepareStatement("UPDATE FROM person WHERE nameperson = ' "+ nameperson +" ' ;");
-			posted.setString(1, nameperson);
-			posted.executeUpdate();
-		}
-		catch(Exception e) {
-			
-			System.out.println("Veri silinemedi."+ e) ;
-		}
-		finally {
-			
-			System.out.println("Updated.") ;
-		}
-		
-	}
-	
-	
-	
-	
-	public static boolean registerDevice(String gid, int slotno) {
-		
-		try {
-			
-			PreparedStatement statement = conn.prepareStatement("INSERT INTO geraet (geraetname, slotnummer) values(\'"+ gid + "\'," + slotno + ");");
-			
-			ResultSet result = statement.executeQuery();
-			System.out.println("result from insert into: " + result);
-			
-			return result.next();
-			
-			
-		} catch ( SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	
-	public static ArrayList<String> showTableperson() throws Exception{
-		try {
-			Connection conn = getConnection();
-			PreparedStatement statement = conn.prepareStatement("SELECT * FROM person");
-			
-			ResultSet result = statement.executeQuery();
-			ArrayList<String> array = new ArrayList<String>();
-			while(result.next()) {
-				System.out.print(result.getString(1)); // id
-				System.out.print((" "));
-				System.out.print(result.getString(2)); // name
-				System.out.print((" "));
-				System.out.print(result.getString(3)); // nachname
-				System.out.print((" "));
-				System.out.print(result.getString(4)); // benutzername
-				System.out.print((" "));
-				System.out.print(result.getString(5)); // password
-				System.out.print((" "));
-				System.out.print(result.getString(6)); // status
-				System.out.print((" "));
-				System.out.print(result.getString(7)); // rolle
-				System.out.print(" \n");
-			
-				
-				array.add((String) result.getString("idperson")); // 0
-				array.add((String) result.getString("nameperson"));
-				array.add((String) result.getString("nachname"));
-				array.add((String) result.getString("benutzername")); // 3
-				array.add((String) result.getString("passwort")); // 4
-				array.add((String) result.getString("status"));
-				array.add((String) result.getString("rolle"));
-			}
-			return array ;
-		}catch(Exception e) {
-			
-			System.out.println(e);
-		}
-		
-		return null ;
-		
-		}
-		
-		public static void main(String[] args) throws Exception {
-		
-			getConnection() ;
-			insertData() ;
-		//	deleteData();
-		//  updateData();
-		//	showTableperson();
-			
-	}
-	*/
-	
-
 }

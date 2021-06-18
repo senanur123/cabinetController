@@ -7,11 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import DatabaseCM.DBConnection;
-import DatabaseCM.Geraet;
+import DatabaseCM.Device;
 import cabinetController.Client;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,23 +34,21 @@ public class validationScreenController implements Initializable{
 	private Button testButton;
 	
 	@FXML
-	private TableView<Geraet> slotTable;
+	private TableView<Device> slotTable;
 	
 	@FXML
-	private TableColumn<Geraet, Integer> slotColumn;
+	private TableColumn<Device, Integer> slotColumn;
 
 	@FXML
-	private TableColumn<Geraet, String> geraeteColumn;
+	private TableColumn<Device, String> geraeteColumn;
 	
-	ObservableList<Geraet> ol;
+	ObservableList<Device> ol;
 	
 	Socket sock;
 	PrintWriter toServer;
 	BufferedReader fromServer;
 	
 	int failure = 25;
-	
-	static ObservableList<Geraet> olState;
 
 	String burninmsg;
 
@@ -83,11 +78,11 @@ public class validationScreenController implements Initializable{
 		return testNo;
 	}
 	
-	public ObservableList<Geraet> getOl(){
+	public ObservableList<Device> getOl(){
 		return ol;
 	}
 	
-	public void setOl(ObservableList<Geraet> ol){
+	public void setOl(ObservableList<Device> ol){
 		this.ol = ol;
 	}
 	
@@ -105,12 +100,12 @@ public class validationScreenController implements Initializable{
 	int ping;
 	String endPre = "";
 
-	private void pingDevices(ObservableList<Geraet> ol2) throws IOException {
+	private void pingDevices(ObservableList<Device> ol2) throws IOException {
 		
 		
 		for(int i=0; i<ol.size();i++) { // 0 to 5
 			
-			String gid=ol.get(i).getGeraetid();
+			String gid=ol.get(i).getDeviceid();
 			System.out.println("the gerat to pretest: " + gid);
 			preMsg = "PRETST|" + (i+1);
 			toServer.println(preMsg);
@@ -118,10 +113,10 @@ public class validationScreenController implements Initializable{
 			
 			
 			if(msg.contains("NOK")) {
-			
+				
 				
 			}else {
-				ol.get(i).setFailed(false);
+				ol.get(i).setSuccess(true);
 			}
 			
 		}
@@ -176,7 +171,7 @@ public class validationScreenController implements Initializable{
 		labelTest.setText(String.valueOf(test));
 		
 		slotColumn.setCellValueFactory(new PropertyValueFactory<>("slotno"));
-		geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("geraetid"));
+		geraeteColumn.setCellValueFactory(new PropertyValueFactory<>("deviceid"));
 		
 		ol = registerController.getInstance().getOl(); 
 		slotTable.getItems().addAll(ol);

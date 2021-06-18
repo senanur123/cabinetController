@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import DatabaseCM.DBConnection;
-import DatabaseCM.Geraet;
+import DatabaseCM.Device;
 import cabinetController.Client;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -66,7 +66,7 @@ public class executionController implements Initializable {
 	
 	int targetNo = 0;
 	
-	ObservableList<Geraet> ol;
+	ObservableList<Device> ol;
 	
 
 	Timer timer = new Timer();
@@ -77,11 +77,11 @@ public class executionController implements Initializable {
 		
 	}
 	
-	public void setOl(ObservableList<Geraet> ol) {
+	public void setOl(ObservableList<Device> ol) {
 		this.ol = ol;
 	}
 	
-	public ObservableList<Geraet> getOl() {
+	public ObservableList<Device> getOl() {
 		return ol;
 	}
 	
@@ -151,7 +151,7 @@ public class executionController implements Initializable {
 			instance.setOl(ol);
 			System.out.println("inside exec!");
 			for(int m = 0; m<ol.size();m++) {
-				System.out.println(m + ". element of ol: " + ol.get(m).getGeraetid());
+				System.out.println(m + ". element of ol: " + ol.get(m).getDeviceid());
 			}
 			int tn = validationScreenController.getInstance().getTestNo();
 			testNoLabel.setText(String.valueOf(tn));
@@ -261,12 +261,13 @@ public class executionController implements Initializable {
 		try {
 		
 			if(fromServer.readLine().contains("Starting STRTPING")) {
-				setExp("The devices are being pinged...");
+				setExp("Geräten werden gepingt");
 				for(int i=0;i<ol.size();i++) {
 					toServer.println("PING|"+(i+1));
 					if(fromServer.readLine().contains("NOK")) {
-						ol.get(i).setFailed(true);
+						
 					}else {
+						ol.get(i).setSuccess(true);
 						System.out.println("device okay!");
 					}
 				}
@@ -453,7 +454,6 @@ public class executionController implements Initializable {
 	
 				    			}
 					    		
-					    		
 				    			targetNo++; 					      //  1, 
 				    							      //  1, 
 				    			
@@ -476,8 +476,6 @@ public class executionController implements Initializable {
 
 		
 	}
-
-
 
 	public void setPhase(int pNo) {
 		phaseLabel.setText(String.valueOf(pNo) + "/9");

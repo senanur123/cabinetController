@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="851.0" prefWidth="915.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.validationScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800.0" minWidth="1000.0" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="layouts.validationScreenController">
    <children>
       <Label id="type" alignment="CENTER" layoutY="53.0" prefHeight="58.0" prefWidth="600.0" style="-fx-background-color: GAINSBORO;" text="BESTÄTIGUNG - VORTEST" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <font>
@@ -34,7 +34,7 @@
                         <Label prefHeight="31.0" prefWidth="100.0" style="-fx-background-color: Black;" text="Testnummer:" textFill="WHITE" />
                         <Label fx:id="labelTest" prefHeight="31.0" prefWidth="100.0" style="-fx-background-color: BLACK;" textFill="WHITE" />
                         <Label prefHeight="31.0" prefWidth="100.0" style="-fx-background-color: BLACK;" text="Datum:" textFill="WHITE" />
-                        <Label fx:id="labelDate" prefHeight="31.0" prefWidth="100.0" style="-fx-background-color: BLACK;" text="                      " textFill="WHITE" />
+                        <Label fx:id="labelDate" prefHeight="31.0" prefWidth="194.0" style="-fx-background-color: BLACK;" text="                      " textFill="WHITE" />
                      </children>
                   </HBox>
                   <TableView fx:id="slotTable" maxHeight="500.0" maxWidth="600.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0">
